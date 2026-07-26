@@ -337,68 +337,218 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
 <footer>GATI Foundation — Country Overview Dashboard · v2</footer>
 
 <script>
-/* Compact data builder: [Year, Country, Indian, TotalForeigners] → flat array of row objects */
-function _e(rows){
-  const o=[];
-  for(const[y,c,i,t]of rows){
-    if(i!==null&&i!==undefined)o.push({Year:y,Country:c,Nationality:"Indian",Value:i});
-    if(t!==null&&t!==undefined)o.push({Year:y,Country:c,Nationality:"Total Foreigners",Value:t});
+/* ================================================================
+   Google Sheets CSV Data Loader
+   Fetches three published CSV sheets, parses the wide-format data
+   into the same DATA object the dashboard expects, then boots the app.
+   ================================================================ */
+
+/* The global DATA object that app.js consumes */
+var DATA = {};
+
+/* ---------- CSV URLs (one per theme sheet) ---------- */
+const CSV_URLS = {
+  allReasons:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTMjDuUhxNxoUHGYkcu8p8l5ohc-Vn9eEkc9ZTBHXlFCAXVCXQWZK4zcD6VCs2Xx9caJeh1rrUb2PYb/pub?output=csv',
+  employment:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vR8e6qyXZRRc-S6Zy2fYk6GvXIHHMO6wtDHmSFmgkm2XKW7cpCSMViK0YvgeJnlURDQKEXx1Qrwlgz4/pub?output=csv',
+  healthcare:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-1jih6IP86hYWFzkyNGQu4p3a62MlIKdEH-UzpARUlHRD9RpiDb-E9_OBnJ6nDCic59I-tuIWddW8/pub?output=csv'
+};
+
+/* ---------- Minimal RFC 4180 CSV parser ---------- */
+function parseCSV(text) {
+  const rows = [];
+  let i = 0;
+  while (i < text.length) {
+    const row = [];
+    while (true) {
+      let val = '';
+      if (text[i] === '"') {
+        i++; // skip opening quote
+        while (i < text.length) {
+          if (text[i] === '"') {
+            if (text[i + 1] === '"') { val += '"'; i += 2; }
+            else { i++; break; }
+          } else { val += text[i]; i++; }
+        }
+      } else {
+        while (i < text.length && text[i] !== ',' && text[i] !== '\r' && text[i] !== '\n') {
+          val += text[i]; i++;
+        }
+      }
+      row.push(val);
+      if (i < text.length && text[i] === ',') { i++; continue; }
+      break;
+    }
+    // skip line endings
+    if (text[i] === '\r') i++;
+    if (text[i] === '\n') i++;
+    rows.push(row);
   }
-  return o;
+  return rows;
 }
 
-const DATA = {
-/* ===== ALLREGIONS STOCK (2021-2025) ===== */
-AllRegions_Stock: _e([
-[2021,"France",36197,6932000],[2021,"Germany",171895,11817790],[2021,"Italy",165512,5171894],[2021,"Japan",36777,2823565],[2021,"Poland",14290,954551],[2021,"South Korea",11542,1956781],[2021,"Spain",51555,5402702],[2021,"UK",370000,6013000],[2021,"USA",2709199,45269644],
-[2022,"France",40515,7029000],[2022,"Germany",210385,13383910],[2022,"Italy",162492,5030716],[2022,"Japan",40752,2961969],[2022,"Poland",22726,967066],[2022,"South Korea",14419,2245912],[2022,"Spain",50096,5509046],[2022,"USA",2839618,46182089],
-[2023,"France",43790,7309000],[2023,"Germany",246125,13895865],[2023,"Italy",167333,5141341],[2023,"Japan",46262,3223858],[2023,"Poland",21620,1088590],[2023,"South Korea",15789,2507584],[2023,"Spain",52786,6089620],[2023,"USA",2910042,47831053],
-[2024,"France",48931,7749000],[2024,"Germany",277455,14061640],[2024,"Italy",170880,5253658],[2024,"Japan",51345,3588956],[2024,"Poland",28154,1168501],[2024,"South Korea",16851,2650783],[2024,"Spain",56144,6502282],[2024,"USA",3162885,50234841],
-[2025,"France",52018,7970000],[2025,"Germany",311130,14070225],[2025,"Italy",171429,5371251],[2025,"Japan",56686,3956619],[2025,"Spain",63015,6911971]
-]),
+/* ---------- Number parser (handles Indian comma grouping like "3,71,773") ---------- */
+function parseNumber(s) {
+  if (!s || s === 'N/A' || s.trim() === '') return null;
+  const cleaned = s.replace(/,/g, '').trim();
+  if (cleaned === '' || cleaned === 'N/A') return null;
+  const n = Number(cleaned);
+  return isNaN(n) ? null : n;
+}
 
-/* ===== ALLREGIONS FLOW (2021-2025) ===== */
-AllRegions_Flow: _e([
-[2021,"Canada",127945,406055],[2021,"France",45437,735035],[2021,"Germany",23120,393342],[2021,"Italy",5571,241595],[2021,"Poland",7737,967345],[2021,"South Korea",437,-42684],[2021,"Spain",6540,371773],[2021,"UK",133000,467000],
-[2022,"Canada",118250,437635],[2022,"France",159345,1743417],[2022,"Germany",40534,1545503],[2022,"Italy",14825,449118],[2022,"Poland",17170,700264],[2022,"South Korea",1496,168377],[2022,"Spain",7576,455553],[2022,"UK",254000,891000],
-[2023,"Canada",139790,471820],[2023,"France",214084,2446108],[2023,"Germany",38235,736643],[2023,"Italy",11976,330730],[2023,"Poland",13684,642789],[2023,"South Korea",684,160668],[2023,"Spain",7202,548697],[2023,"UK",259000,848000],
-[2024,"Canada",127375,483655],[2024,"France",237832,2857776],[2024,"Germany",42587,511062],[2024,"Italy",16907,290119],[2024,"Poland",10358,488846],[2024,"Spain",6655,561640],[2024,"UK",89000,331000],
-[2025,"Canada",98830,393770],[2025,"France",239357,2958913],[2025,"Germany",38904,331689],[2025,"Spain",6099,635438],[2025,"UK",64000,171000]
-]),
+/* ---------- Country column map ----------
+   The CSV header uses alternating Country, Period columns.
+   We identify the 10 country columns by their header names.        */
+const COUNTRY_HEADERS = [
+  'Germany', 'Japan', 'Italy', 'Spain', 'USA', 'UK',
+  'South Korea', 'France', 'Canada', 'Poland'
+];
 
-/* ===== EMPLOYMENT STOCK (2020-2024) ===== */
-Employment_Stock: _e([
-[2020,"Canada",190170,534230],[2020,"France",9586,null],[2020,"Germany",70190,4885400],[2020,"Italy",63656,2204000],[2020,"Poland",6166,461546],[2020,"Spain",4716,195795],
-[2021,"Canada",185620,511445],[2021,"France",10202,null],[2021,"Germany",82660,5170080],[2021,"Italy",69871,2257000],[2021,"Japan",16464,790405],[2021,"Poland",8760,634255],[2021,"South Korea",2677,281176],[2021,"Spain",5445,284364],[2021,"UK",54000,163516],[2021,"USA",915158,null],
-[2022,"Canada",264100,766380],[2022,"France",11761,null],[2022,"Germany",106710,5630640],[2022,"Italy",77210,2374000],[2022,"Japan",17882,847256],[2022,"Poland",15663,547143],[2022,"South Korea",3066,343835],[2022,"Spain",7516,391180],[2022,"USA",967855,28737000],
-[2023,"Canada",416190,1262845],[2023,"France",13154,null],[2023,"Germany",132140,6010540],[2023,"Italy",73488,2374000],[2023,"Japan",21754,1028848],[2023,"Poland",14844,666330],[2023,"South Korea",3432,418590],[2023,"Spain",8641,417265],[2023,"USA",1017178,29932000],
-[2024,"Canada",463585,1499275],[2024,"France",15221,450789],[2024,"Germany",155310,6283170],[2024,"Italy",80179,2514000],[2024,"Japan",24799,1245211],[2024,"Poland",16972,683100],[2024,"South Korea",3319,473659],[2024,"Spain",9664,503970],[2024,"USA",1117204,30908000]
-]),
+/* ---------- Map Nationality text ---------- */
+function mapNationality(raw) {
+  const lc = raw.trim().toLowerCase();
+  if (lc === 'indians' || lc === 'indian') return 'Indian';
+  if (lc.startsWith('total foreign')) return 'Total Foreigners';
+  return raw.trim();
+}
 
-/* ===== EMPLOYMENT FLOW (2020-2024) ===== */
-Employment_Flow: _e([
-[2020,"France",1184,27337],[2020,"Germany",5027,51023],[2020,"Italy",834,10377],[2020,"Poland",2823,502342],[2020,"Spain",1577,81158],
-[2021,"France",1389,38031],[2021,"Germany",7161,60063],[2021,"Italy",1705,50900],[2021,"Poland",4496,790070],[2021,"Spain",1873,88119],
-[2022,"France",2373,55247],[2022,"Germany",12902,96865],[2022,"Italy",3359,67271],[2022,"Poland",12126,447225],[2022,"Spain",2811,140034],[2022,"UK",112000,266782],
-[2023,"France",2625,58762],[2023,"Germany",12289,102411],[2023,"Italy",5028,36783],[2023,"Poland",9325,427162],[2023,"Spain",2318,128844],[2023,"UK",124000,336007],
-[2024,"France",2684,58603],[2024,"Germany",8358,77149],[2024,"Italy",8558,40451],[2024,"Poland",5950,337874],[2024,"Spain",1587,95735],[2024,"UK",45000,209268]
-]),
+/* ---------- Parse one sheet CSV into flat row objects ---------- */
+function parseSheetCSV(csvText) {
+  const grid = parseCSV(csvText);
+  if (grid.length < 2) return [];
 
-/* ===== EMPLOYMENT STOCK 2024 SNAPSHOT (widest coverage) ===== */
-Employment_Stock_2024_Snapshot: _e([
-[2024,"Canada",463585,1499275],[2024,"France",15221,450789],[2024,"Germany",155310,6283170],[2024,"Italy",80179,2514000],[2024,"Japan",24799,1245211],[2024,"Poland",16972,683100],[2024,"South Korea",3319,473659],[2024,"Spain",9664,503970],[2024,"USA",1117204,30908000]
-]),
+  /* Identify country column indices from header row */
+  const header = grid[0].map(h => h.trim());
+  const countryIndices = []; // [{name, idx}]
+  for (let ci = 4; ci < header.length; ci++) {
+    const hdr = header[ci].trim();
+    const match = COUNTRY_HEADERS.find(c => hdr.toLowerCase() === c.toLowerCase()
+      || hdr.toLowerCase().replace(/\s+/g,'') === c.toLowerCase().replace(/\s+/g,''));
+    if (match) {
+      countryIndices.push({ name: match, idx: ci });
+    }
+  }
 
-/* ===== HEALTHCARE NURSES STOCK (2020-2024, multi-year) ===== */
-Healthcare_Nurses_Stock: _e([
-[2020,"Canada",6127,419183],[2020,"Italy",1475,22610],[2020,"Poland",2,315],[2020,"UK",26366,111138],
-[2021,"Canada",6828,428867],[2021,"Italy",1451,23712],[2021,"Japan",37,3064],[2021,"Poland",2,582],[2021,"UK",32565,124036],
-[2022,"Canada",7849,433370],[2022,"Italy",1385,23764],[2022,"Japan",38,5339],[2022,"Poland",2,1353],[2022,"UK",37809,135020],
-[2023,"Canada",10234,442400],[2023,"Germany",4083,null],[2023,"Italy",1379,23311],[2023,"Japan",41,8093],[2023,"Poland",2,2283],[2023,"UK",48409,156851],
-[2024,"Germany",null,177320],[2024,"Italy",1488,23033],[2024,"Japan",40,10468],[2024,"Poland",2,2812],[2024,"UK",62369,182607]
-])
-};
+  const rows = [];
+  for (let ri = 1; ri < grid.length; ri++) {
+    const r = grid[ri];
+    if (!r || r.length < 5) continue;
+
+    const type = (r[1] || '').trim();           // Stock or Flow
+    const nationality = mapNationality(r[2]);    // Indian or Total Foreigners
+    const year = parseInt(r[3], 10);
+    if (isNaN(year)) continue;
+
+    for (const { name: country, idx } of countryIndices) {
+      const val = parseNumber(r[idx]);
+      if (val !== null) {
+        rows.push({ Year: year, Country: country, Nationality: nationality, Value: val, Type: type });
+      }
+    }
+  }
+  return rows;
+}
+
+/* ---------- Build the DATA tables from parsed rows ---------- */
+function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
+
+  function filterRows(src, type) {
+    return src.filter(r => r.Type === type).map(({ Year, Country, Nationality, Value }) =>
+      ({ Year, Country, Nationality, Value }));
+  }
+
+  DATA.AllRegions_Stock = filterRows(allReasonRows, 'Stock');
+  DATA.AllRegions_Flow  = filterRows(allReasonRows, 'Flow');
+
+  DATA.Employment_Stock = filterRows(employmentRows, 'Stock');
+  DATA.Employment_Flow  = filterRows(employmentRows, 'Flow');
+
+  /* Healthcare — only Stock rows are used by the dashboard */
+  DATA.Healthcare_Nurses_Stock = filterRows(healthcareRows, 'Stock');
+
+  /* Employment_Stock_2024_Snapshot: widest-coverage snapshot = all Employment Stock rows for 2024 */
+  DATA.Employment_Stock_2024_Snapshot = DATA.Employment_Stock
+    .filter(r => r.Year === 2024)
+    .map(r => ({ ...r }));
+}
+
+/* ---------- Show / hide loading overlay ---------- */
+function showLoading() {
+  let overlay = document.getElementById('data-loading-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'data-loading-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(246,249,250,0.92);';
+    overlay.innerHTML = '<div style="text-align:center;font-family:Poppins,sans-serif;">'
+      + '<div style="width:48px;height:48px;border:4px solid #84D2E2;border-top-color:#006B76;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px;"></div>'
+      + '<div style="font-size:15px;font-weight:600;color:#006B76;">Loading dashboard data…</div>'
+      + '<style>@keyframes spin{to{transform:rotate(360deg)}}</style>'
+      + '</div>';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+}
+
+function hideLoading() {
+  const overlay = document.getElementById('data-loading-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function showError(msg) {
+  hideLoading();
+  let el = document.getElementById('data-error-banner');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'data-error-banner';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#C0392B;color:#fff;padding:14px 24px;font-family:Poppins,sans-serif;font-size:13.5px;text-align:center;';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+/* ---------- Main loader ---------- */
+async function loadDashboardData() {
+  showLoading();
+  try {
+    const [arResp, emResp, hcResp] = await Promise.all([
+      fetch(CSV_URLS.allReasons),
+      fetch(CSV_URLS.employment),
+      fetch(CSV_URLS.healthcare)
+    ]);
+
+    if (!arResp.ok) throw new Error('Failed to load All Reasons CSV (' + arResp.status + ')');
+    if (!emResp.ok) throw new Error('Failed to load Employment CSV (' + emResp.status + ')');
+    if (!hcResp.ok) throw new Error('Failed to load Healthcare CSV (' + hcResp.status + ')');
+
+    const [arText, emText, hcText] = await Promise.all([
+      arResp.text(), emResp.text(), hcResp.text()
+    ]);
+
+    const allReasonRows  = parseSheetCSV(arText);
+    const employmentRows = parseSheetCSV(emText);
+    const healthcareRows = parseSheetCSV(hcText);
+
+    buildDataTables(allReasonRows, employmentRows, healthcareRows);
+
+    hideLoading();
+
+    /* Boot the dashboard (defined in app.js) */
+    initDashboard();
+
+  } catch (err) {
+    console.error('Dashboard data load error:', err);
+    showError('Unable to load dashboard data. Please check your internet connection and refresh. (' + err.message + ')');
+  }
+}
 </script>
 <script src="app.js"></script>
+<script>
+/* Kick off data loading once both scripts and DOM are ready */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadDashboardData);
+} else {
+  loadDashboardData();
+}
+</script>
 </body>
 </html>
