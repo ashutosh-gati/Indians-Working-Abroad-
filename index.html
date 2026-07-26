@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GATI — Country Overview Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --teal:#006B76;
+  --teal-dark:#00333A;
+  --teal-light:#84D2E2;
+  --gold:#E5A812;
+  --gold-light:#FFCC4E;
+  --gold-dark:#8C6A1F;
+  --gray:#839097;
+  --gray-light:#D8E2E7;
+  --black:#000000;
+  --white:#FFFFFF;
+  --bg:#F6F9FA;
+  --card-border:#E1E9EB;
+  --font:'Poppins',sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--font);background:var(--bg);color:#1A2327;}
+h1,h2,h3{font-family:var(--font);margin:0;}
+p{margin:0;}
+a{color:inherit;}
+
+/* ---------- Site Header (white branding bar) ---------- */
+.site-header{
+  background:var(--white);
+  height:84px;
+  display:flex;
+  align-items:center;
+  padding:0 40px 0 32px;
+  gap:36px;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+  position:relative;
+  z-index:10;
+}
+.site-header-logo{
+  height:70px;
+  width:auto;
+  display:block;
+  flex-shrink:0;
+}
+.site-header-title{
+  font-family:var(--font);
+  font-weight:700;
+  font-size:32px;
+  color:var(--teal);
+  letter-spacing:normal;
+  line-height:1.2;
+  white-space:nowrap;
+}
+
+/* ---------- Teal Hero ---------- */
+.topbar{
+  background:var(--teal);
+  color:var(--white);
+  padding:18px 40px 20px;
+}
+.topbar .subtitle{margin-top:0;font-size:14.5px;color:#CFE9EC;max-width:760px;line-height:1.5;}
+
+/* ---------- Tab nav ---------- */
+.section-nav{
+  display:flex;gap:0;background:var(--teal-dark);padding:0 40px;
+  font-size:13.5px;font-weight:600;
+}
+.tab-btn{
+  background:none;border:none;color:var(--teal-light);
+  padding:13px 22px;font-family:var(--font);font-size:13.5px;font-weight:600;
+  cursor:pointer;border-bottom:3px solid transparent;transition:all .15s ease;
+}
+.tab-btn:hover{color:var(--gold-light);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(255,255,255,.05);}
+
+/* ---------- Tab panels ---------- */
+.tab-panel{display:none;padding:24px 40px 30px;}
+.tab-panel.active{display:block;}
+
+/* ---------- KPI strip ---------- */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;
+  margin-bottom:22px;
+}
+.kpi-card{
+  background:var(--white);border:1px solid var(--card-border);border-top:3px solid var(--gold);
+  border-radius:10px;padding:16px 18px;
+}
+.kpi-label{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.kpi-value{font-size:26px;font-weight:800;color:var(--teal-dark);line-height:1.1;}
+.kpi-caption{font-size:11.5px;color:var(--gray);margin-top:6px;line-height:1.4;}
+
+/* ---------- Section head ---------- */
+.section-head{border-bottom:3px solid var(--gold);padding-bottom:12px;margin-bottom:18px;}
+.eyebrow{font-size:11.5px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;letter-spacing:1px;}
+.section-head h2{font-size:22px;color:var(--teal);font-weight:700;margin-top:4px;}
+.section-head h2 .tag{
+  font-size:11.5px;background:var(--teal-light);color:var(--teal-dark);padding:3px 9px;
+  border-radius:12px;font-weight:700;vertical-align:middle;margin-left:8px;
+}
+.section-intro{font-size:13.8px;color:#3B4A50;max-width:920px;line-height:1.6;margin-top:8px;}
+
+/* ---------- Charts ---------- */
+.chart-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.chart-card{
+  background:var(--white);border:1px solid var(--card-border);border-radius:10px;
+  padding:16px 18px 12px;display:flex;flex-direction:column;
+}
+.chart-card.wide{grid-column:1 / -1;}
+.chart-card h3{font-size:14.5px;font-weight:700;color:var(--teal-dark);}
+.chart-note{font-size:12px;color:var(--gray);margin-top:5px;margin-bottom:10px;line-height:1.5;min-height:20px;}
+.chart-canvas-wrap{position:relative;height:290px;}
+
+/* ---------- Per-chart filters ---------- */
+.chart-filter-row{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px;
+  margin:8px 0 2px;padding:6px 0 4px;border-top:1px dashed var(--card-border);
+}
+.chart-pill{
+  font-size:10.5px;font-family:var(--font);padding:2px 9px;
+  border-radius:12px;border:1px solid var(--gray-light);
+  background:var(--white);color:#6B7A80;cursor:pointer;font-weight:600;
+  transition:all .12s ease;line-height:1.4;
+}
+.chart-pill.active{background:var(--teal);color:var(--white);border-color:var(--teal);}
+.chart-pill:hover{border-color:var(--teal-light);background:#F0F8F9;}
+.chart-pill.active:hover{background:#00828F;}
+.chart-year-sel{
+  font-size:11px;padding:2px 6px;border-radius:4px;
+  border:1px solid var(--card-border);font-family:var(--font);font-weight:600;
+  color:#1A2327;background:var(--white);margin-left:4px;
+}
+.filter-year-label{font-size:10px;color:var(--gray);font-weight:600;margin-left:8px;text-transform:uppercase;letter-spacing:.3px;}
+.filter-sep{font-size:10px;color:var(--gray);margin:0 2px;}
+
+/* ---------- Notes ---------- */
+.no-flow-note{
+  background:#FFF7E6;border:1px dashed var(--gold);border-radius:8px;padding:12px 16px;
+  font-size:12.5px;color:#5C4300;line-height:1.5;margin-top:14px;
+}
+.data-notes{
+  background:var(--white);border-radius:10px;border:1px solid var(--card-border);
+  padding:30px 40px;max-width:800px;
+}
+.data-notes h2{color:var(--teal);font-size:20px;margin-bottom:16px;}
+.data-notes ul{margin:0;padding-left:20px;font-size:13.5px;line-height:1.75;color:#3B4A50;}
+.data-notes li{margin-bottom:10px;}
+.data-notes b{color:var(--teal-dark);}
+
+/* ---------- Footer ---------- */
+footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.5px;padding:14px;}
+
+@media (max-width:900px){
+  .chart-grid{grid-template-columns:1fr;}
+  .site-header{padding:0 18px 0 18px;gap:16px;height:68px;}
+  .site-header-logo{height:44px;}
+  .site-header-title{font-size:22px;}
+  .topbar,.section-nav,.tab-panel,footer{padding-left:18px;padding-right:18px;}
+  .data-notes{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <img src="gati logo final.png" alt="GATI — Global Access to Talent from India" class="site-header-logo">
+  <span class="site-header-title">Country Overview Dashboard</span>
+</div>
+
+<header class="topbar">
+  <p class="subtitle">Indian talent abroad, by country — population, employment and healthcare workforce, benchmarked against each country's total foreign-national numbers.</p>
+</header>
+
+<nav class="section-nav" id="sectionNav">
+  <button class="tab-btn active" data-tab="population">Population</button>
+  <button class="tab-btn" data-tab="employment">Employment</button>
+  <button class="tab-btn" data-tab="healthcare">Healthcare</button>
+  <button class="tab-btn" data-tab="notes">Data Notes</button>
+</nav>
+
+<main>
+  <!-- ================= POPULATION TAB ================= -->
+  <div class="tab-panel active" id="tab-population">
+    <div class="section-head">
+      <span class="eyebrow">Section 01</span>
+      <h2>Indian Population Abroad <span class="tag">All purposes</span></h2>
+      <p class="section-intro">Indians resident in a country for any purpose — work, study, family or otherwise — alongside each country's total foreign-national numbers.</p>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi-card" id="kpi-pop-indian">
+        <div class="kpi-label">Indian Population 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+      <div class="kpi-card" id="kpi-pop-foreign">
+        <div class="kpi-label">Total Foreign Population 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+      <div class="kpi-card" id="kpi-pop-share">
+        <div class="kpi-label">Indian Share of Population 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Indian Population — Trend by Country (Stock)</h3>
+        <div class="chart-filter-row" id="filters-pop-stock-trend"></div>
+        <p class="chart-note" id="note-pop-stock-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-stock-trend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Share of Total Foreign Population, by Country</h3>
+        <div class="chart-filter-row" id="filters-pop-share"></div>
+        <p class="chart-note" id="note-pop-share"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-share"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <h3>New Indian Arrivals — Trend by Country (Flow)</h3>
+        <div class="chart-filter-row" id="filters-pop-flow-trend"></div>
+        <p class="chart-note" id="note-pop-flow-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-trend"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EMPLOYMENT TAB ================= -->
+  <div class="tab-panel" id="tab-employment">
+    <div class="section-head">
+      <span class="eyebrow">Section 02</span>
+      <h2>Indian Employment Abroad <span class="tag">Employment-specific</span></h2>
+      <p class="section-intro">Indians formally employed in each country, along with total foreign workforce numbers.</p>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi-card" id="kpi-emp-indian">
+        <div class="kpi-label">Indian Employment 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+      <div class="kpi-card" id="kpi-emp-foreign">
+        <div class="kpi-label">Total Foreign Employment 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+      <div class="kpi-card" id="kpi-emp-share">
+        <div class="kpi-label">Indian Share of Employment 2024 (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Indian Workers by Country — Widest-Coverage Snapshot</h3>
+        <div class="chart-filter-row" id="filters-emp-snapshot"></div>
+        <p class="chart-note" id="note-emp-snapshot"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-emp-snapshot"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Share of Total Foreign Workforce, by Country</h3>
+        <div class="chart-filter-row" id="filters-emp-share"></div>
+        <p class="chart-note" id="note-emp-share"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-emp-share"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Employment — Trend by Country (Stock)</h3>
+        <div class="chart-filter-row" id="filters-emp-stock-trend"></div>
+        <p class="chart-note" id="note-emp-stock-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-emp-stock-trend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>New Indian Workers — Trend by Country (Flow)</h3>
+        <div class="chart-filter-row" id="filters-emp-flow-trend"></div>
+        <p class="chart-note" id="note-emp-flow-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-emp-flow-trend"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HEALTHCARE TAB ================= -->
+  <div class="tab-panel" id="tab-healthcare">
+    <div class="section-head">
+      <span class="eyebrow">Section 03</span>
+      <h2>Indian Nurses Abroad <span class="tag">Healthcare — nurses only</span></h2>
+      <p class="section-intro">Indian nurses working abroad, with total foreign nurse workforce as benchmark.</p>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi-card" id="kpi-health-stock">
+        <div class="kpi-label">Total Indian nurses</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+      <div class="kpi-card" id="kpi-health-share">
+        <div class="kpi-label">Avg. Indian share of nurses</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Indian Nurses by Country</h3>
+        <div class="chart-filter-row" id="filters-health-snapshot"></div>
+        <p class="chart-note" id="note-health-snapshot"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-snapshot"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Share of Total Foreign Nurses, by Country</h3>
+        <div class="chart-filter-row" id="filters-health-share"></div>
+        <p class="chart-note" id="note-health-share"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-share"></canvas></div>
+      </div>
+    </div>
+    <div class="no-flow-note">
+      <b>No Flow chart for nurses:</b> annual new-arrival (Flow) data for nurses is too sparse for reliable charting, so this section shows Stock (point-in-time totals) only.
+    </div>
+  </div>
+
+  <!-- ================= DATA NOTES TAB ================= -->
+  <div class="tab-panel" id="tab-notes">
+    <div class="data-notes">
+      <h2>Data Notes</h2>
+      <ul>
+        <li><b>Stock vs Flow:</b> Stock = a point-in-time total (e.g., total Indians resident as of year-end). Flow = new arrivals/entries during that calendar year. Different units — never combined on the same chart axis.</li>
+        <li><b>Indian share of a country's foreign population/workforce</b> = Indian ÷ that same country's own Total Foreigners figure, for the same year. It is never pooled or averaged using other countries' totals in the denominator.</li>
+        <li><b>"Avg. Indian share" KPIs</b> are a simple, unweighted average of each individual country's own share — not a single global percentage weighted by population size.</li>
+        <li>Each table has its own country list, which differs because the underlying data coverage varies by country and year. Every chart lists exactly which countries are reflected based on the active filters and available data.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer>GATI Foundation — Country Overview Dashboard · v2</footer>
+
+<script>
+/* Compact data builder: [Year, Country, Indian, TotalForeigners] → flat array of row objects */
+function _e(rows){
+  const o=[];
+  for(const[y,c,i,t]of rows){
+    if(i!==null&&i!==undefined)o.push({Year:y,Country:c,Nationality:"Indian",Value:i});
+    if(t!==null&&t!==undefined)o.push({Year:y,Country:c,Nationality:"Total Foreigners",Value:t});
+  }
+  return o;
+}
+
+const DATA = {
+/* ===== ALLREGIONS STOCK (2021-2025) ===== */
+AllRegions_Stock: _e([
+[2021,"France",36197,6932000],[2021,"Germany",171895,11817790],[2021,"Italy",165512,5171894],[2021,"Japan",36777,2823565],[2021,"Poland",14290,954551],[2021,"South Korea",11542,1956781],[2021,"Spain",51555,5402702],[2021,"UK",370000,6013000],[2021,"USA",2709199,45269644],
+[2022,"France",40515,7029000],[2022,"Germany",210385,13383910],[2022,"Italy",162492,5030716],[2022,"Japan",40752,2961969],[2022,"Poland",22726,967066],[2022,"South Korea",14419,2245912],[2022,"Spain",50096,5509046],[2022,"USA",2839618,46182089],
+[2023,"France",43790,7309000],[2023,"Germany",246125,13895865],[2023,"Italy",167333,5141341],[2023,"Japan",46262,3223858],[2023,"Poland",21620,1088590],[2023,"South Korea",15789,2507584],[2023,"Spain",52786,6089620],[2023,"USA",2910042,47831053],
+[2024,"France",48931,7749000],[2024,"Germany",277455,14061640],[2024,"Italy",170880,5253658],[2024,"Japan",51345,3588956],[2024,"Poland",28154,1168501],[2024,"South Korea",16851,2650783],[2024,"Spain",56144,6502282],[2024,"USA",3162885,50234841],
+[2025,"France",52018,7970000],[2025,"Germany",311130,14070225],[2025,"Italy",171429,5371251],[2025,"Japan",56686,3956619],[2025,"Spain",63015,6911971]
+]),
+
+/* ===== ALLREGIONS FLOW (2021-2025) ===== */
+AllRegions_Flow: _e([
+[2021,"Canada",127945,406055],[2021,"France",45437,735035],[2021,"Germany",23120,393342],[2021,"Italy",5571,241595],[2021,"Poland",7737,967345],[2021,"South Korea",437,-42684],[2021,"Spain",6540,371773],[2021,"UK",133000,467000],
+[2022,"Canada",118250,437635],[2022,"France",159345,1743417],[2022,"Germany",40534,1545503],[2022,"Italy",14825,449118],[2022,"Poland",17170,700264],[2022,"South Korea",1496,168377],[2022,"Spain",7576,455553],[2022,"UK",254000,891000],
+[2023,"Canada",139790,471820],[2023,"France",214084,2446108],[2023,"Germany",38235,736643],[2023,"Italy",11976,330730],[2023,"Poland",13684,642789],[2023,"South Korea",684,160668],[2023,"Spain",7202,548697],[2023,"UK",259000,848000],
+[2024,"Canada",127375,483655],[2024,"France",237832,2857776],[2024,"Germany",42587,511062],[2024,"Italy",16907,290119],[2024,"Poland",10358,488846],[2024,"Spain",6655,561640],[2024,"UK",89000,331000],
+[2025,"Canada",98830,393770],[2025,"France",239357,2958913],[2025,"Germany",38904,331689],[2025,"Spain",6099,635438],[2025,"UK",64000,171000]
+]),
+
+/* ===== EMPLOYMENT STOCK (2020-2024) ===== */
+Employment_Stock: _e([
+[2020,"Canada",190170,534230],[2020,"France",9586,null],[2020,"Germany",70190,4885400],[2020,"Italy",63656,2204000],[2020,"Poland",6166,461546],[2020,"Spain",4716,195795],
+[2021,"Canada",185620,511445],[2021,"France",10202,null],[2021,"Germany",82660,5170080],[2021,"Italy",69871,2257000],[2021,"Japan",16464,790405],[2021,"Poland",8760,634255],[2021,"South Korea",2677,281176],[2021,"Spain",5445,284364],[2021,"UK",54000,163516],[2021,"USA",915158,null],
+[2022,"Canada",264100,766380],[2022,"France",11761,null],[2022,"Germany",106710,5630640],[2022,"Italy",77210,2374000],[2022,"Japan",17882,847256],[2022,"Poland",15663,547143],[2022,"South Korea",3066,343835],[2022,"Spain",7516,391180],[2022,"USA",967855,28737000],
+[2023,"Canada",416190,1262845],[2023,"France",13154,null],[2023,"Germany",132140,6010540],[2023,"Italy",73488,2374000],[2023,"Japan",21754,1028848],[2023,"Poland",14844,666330],[2023,"South Korea",3432,418590],[2023,"Spain",8641,417265],[2023,"USA",1017178,29932000],
+[2024,"Canada",463585,1499275],[2024,"France",15221,450789],[2024,"Germany",155310,6283170],[2024,"Italy",80179,2514000],[2024,"Japan",24799,1245211],[2024,"Poland",16972,683100],[2024,"South Korea",3319,473659],[2024,"Spain",9664,503970],[2024,"USA",1117204,30908000]
+]),
+
+/* ===== EMPLOYMENT FLOW (2020-2024) ===== */
+Employment_Flow: _e([
+[2020,"France",1184,27337],[2020,"Germany",5027,51023],[2020,"Italy",834,10377],[2020,"Poland",2823,502342],[2020,"Spain",1577,81158],
+[2021,"France",1389,38031],[2021,"Germany",7161,60063],[2021,"Italy",1705,50900],[2021,"Poland",4496,790070],[2021,"Spain",1873,88119],
+[2022,"France",2373,55247],[2022,"Germany",12902,96865],[2022,"Italy",3359,67271],[2022,"Poland",12126,447225],[2022,"Spain",2811,140034],[2022,"UK",112000,266782],
+[2023,"France",2625,58762],[2023,"Germany",12289,102411],[2023,"Italy",5028,36783],[2023,"Poland",9325,427162],[2023,"Spain",2318,128844],[2023,"UK",124000,336007],
+[2024,"France",2684,58603],[2024,"Germany",8358,77149],[2024,"Italy",8558,40451],[2024,"Poland",5950,337874],[2024,"Spain",1587,95735],[2024,"UK",45000,209268]
+]),
+
+/* ===== EMPLOYMENT STOCK 2024 SNAPSHOT (widest coverage) ===== */
+Employment_Stock_2024_Snapshot: _e([
+[2024,"Canada",463585,1499275],[2024,"France",15221,450789],[2024,"Germany",155310,6283170],[2024,"Italy",80179,2514000],[2024,"Japan",24799,1245211],[2024,"Poland",16972,683100],[2024,"South Korea",3319,473659],[2024,"Spain",9664,503970],[2024,"USA",1117204,30908000]
+]),
+
+/* ===== HEALTHCARE NURSES STOCK (2020-2024, multi-year) ===== */
+Healthcare_Nurses_Stock: _e([
+[2020,"Canada",6127,419183],[2020,"Italy",1475,22610],[2020,"Poland",2,315],[2020,"UK",26366,111138],
+[2021,"Canada",6828,428867],[2021,"Italy",1451,23712],[2021,"Japan",37,3064],[2021,"Poland",2,582],[2021,"UK",32565,124036],
+[2022,"Canada",7849,433370],[2022,"Italy",1385,23764],[2022,"Japan",38,5339],[2022,"Poland",2,1353],[2022,"UK",37809,135020],
+[2023,"Canada",10234,442400],[2023,"Germany",4083,null],[2023,"Italy",1379,23311],[2023,"Japan",41,8093],[2023,"Poland",2,2283],[2023,"UK",48409,156851],
+[2024,"Germany",null,177320],[2024,"Italy",1488,23033],[2024,"Japan",40,10468],[2024,"Poland",2,2812],[2024,"UK",62369,182607]
+])
+};
+</script>
+<script src="app.js"></script>
+</body>
+</html>
