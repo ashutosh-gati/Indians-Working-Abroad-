@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GATI Country Overview Dashboard v2 — logic
+   GATI Indian Diaspora Dashboard v2 — logic
    Per-chart filters, tab navigation, country names in captions.
    ========================================================================== */
 
