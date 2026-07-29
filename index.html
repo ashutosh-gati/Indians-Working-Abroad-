@@ -155,6 +155,33 @@ a{color:inherit;}
 /* ---------- Footer ---------- */
 footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.5px;padding:14px;}
 
+/* ---------- Country Nav Dropdown ---------- */
+.country-nav{position:relative;margin-left:auto;}
+.country-nav-btn{
+  background:var(--teal);color:var(--white);border:none;
+  padding:9px 20px;border-radius:8px;font-family:var(--font);
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:background .15s;display:flex;align-items:center;gap:6px;
+}
+.country-nav-btn:hover{background:#00828F;}
+.country-nav-btn::after{content:'▾';font-size:10px;margin-left:2px;}
+.country-nav-menu{
+  display:none;position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--white);border-radius:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,.14);min-width:220px;
+  padding:6px;z-index:100;border:1px solid var(--card-border);
+}
+.country-nav.open .country-nav-menu{display:block;}
+.country-nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:8px;text-decoration:none;color:#1A2327;
+  font-size:13.5px;font-weight:500;font-family:var(--font);
+  transition:background .1s;
+}
+.country-nav-item:hover{background:#F0F8F9;}
+.country-nav-item.active{background:var(--teal);color:var(--white);}
+.country-flag{font-size:18px;line-height:1;}
+
 @media (max-width:900px){
   .chart-grid{grid-template-columns:1fr;}
   .site-header{padding:0 18px 0 18px;gap:16px;height:68px;}
@@ -162,6 +189,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   .site-header-title{font-size:22px;}
   .topbar,.section-nav,.tab-panel,footer{padding-left:18px;padding-right:18px;}
   .data-notes{padding:20px;}
+  .country-nav-btn{font-size:11.5px;padding:7px 14px;}
 }
 </style>
 </head>
@@ -170,6 +198,17 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
 <div class="site-header">
   <img src="gati logo final.png" alt="GATI — Global Access to Talent from India" class="site-header-logo">
   <span class="site-header-title">Country Overview Dashboard</span>
+  <div class="country-nav" id="countryNav">
+    <button class="country-nav-btn" onclick="this.parentElement.classList.toggle('open')">Country Profiles</button>
+    <div class="country-nav-menu">
+      <a href="index.html" class="country-nav-item active">
+        <span class="country-flag">🌐</span> Overview
+      </a>
+      <a href="japan.html" class="country-nav-item">
+        <span class="country-flag">🇯🇵</span> Japan
+      </a>
+    </div>
+  </div>
 </div>
 
 <header class="topbar">
@@ -548,6 +587,12 @@ async function loadDashboardData() {
 </script>
 <script src="app.js"></script>
 <script>
+/* Close country nav dropdown on outside click */
+document.addEventListener('click', e => {
+  if (!e.target.closest('.country-nav')) {
+    document.querySelectorAll('.country-nav.open').forEach(n => n.classList.remove('open'));
+  }
+});
 /* Kick off data loading once both scripts and DOM are ready */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', loadDashboardData);
