@@ -35,7 +35,7 @@ function uniqueSorted(arr) {
 }
 function getTableCountries(t) { return uniqueSorted(DATA[t].map(r => r.Country)); }
 function getTableYears(t) { return uniqueSorted(DATA[t].map(r => r.Year)); }
-function fmtNum(n) { return Math.round(n).toLocaleString('en-IN'); }
+function fmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
 function fmtPct(n) { return n.toFixed(1) + '%'; }
 
 /* ---- Initialize per-chart filter states ---- */
