@@ -198,6 +198,20 @@ function renderShareKPI(elId, table) {
 /* ---- Chart options ---- */
 const chartInstances = {};
 function baseFont() { return { family: "'Poppins', sans-serif", size: 12 }; }
+function getCustomLegendLabels(chart) {
+  let orig = null;
+  if (Chart.overrides && Chart.overrides[chart.config.type] && Chart.overrides[chart.config.type].plugins && Chart.overrides[chart.config.type].plugins.legend && Chart.overrides[chart.config.type].plugins.legend.labels) {
+    orig = Chart.overrides[chart.config.type].plugins.legend.labels.generateLabels;
+  }
+  if (!orig) orig = Chart.defaults.plugins.legend.labels.generateLabels;
+  
+  const labels = orig(chart);
+  labels.forEach(label => {
+    label.textDecoration = 'none';
+    label.fontColor = label.hidden ? '#C62828' : '#2E7D32';
+  });
+  return labels;
+}
 function renderOrUpdate(canvasId, config) {
   const ctx = document.getElementById(canvasId);
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
@@ -215,7 +229,7 @@ function lineOptions() {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12 } },
+      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12, generateLabels: getCustomLegendLabels } },
       tooltip: { titleFont: baseFont(), bodyFont: baseFont(), callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.parsed.y) } }
     },
     scales: {
@@ -241,7 +255,7 @@ function stackedBarOptions() {
   return {
     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12 } },
+      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12, generateLabels: getCustomLegendLabels } },
       tooltip: { titleFont: baseFont(), bodyFont: baseFont(), callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + '%' } }
     },
     scales: {

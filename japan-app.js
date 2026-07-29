@@ -147,6 +147,20 @@ function sumCategoriesArray(catList, field) {
 /* ---- Chart.js helpers ---- */
 const chartInstances = {};
 function baseFont() { return { family: "'Poppins', sans-serif", size: 12 }; }
+function getCustomLegendLabels(chart) {
+  let orig = null;
+  if (Chart.overrides && Chart.overrides[chart.config.type] && Chart.overrides[chart.config.type].plugins && Chart.overrides[chart.config.type].plugins.legend && Chart.overrides[chart.config.type].plugins.legend.labels) {
+    orig = Chart.overrides[chart.config.type].plugins.legend.labels.generateLabels;
+  }
+  if (!orig) orig = Chart.defaults.plugins.legend.labels.generateLabels;
+  
+  const labels = orig(chart);
+  labels.forEach(label => {
+    label.textDecoration = 'none';
+    label.fontColor = label.hidden ? '#C62828' : '#2E7D32';
+  });
+  return labels;
+}
 
 function renderOrUpdate(canvasId, config) {
   const ctx = document.getElementById(canvasId);
@@ -160,7 +174,7 @@ function lineOptions(yCallback) {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12 } },
+      legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12, generateLabels: getCustomLegendLabels } },
       tooltip: { titleFont: baseFont(), bodyFont: baseFont() }
     },
     scales: {
@@ -379,7 +393,7 @@ function renderWorkforceCharts() {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'right', labels: { font: baseFont(), padding: 10, usePointStyle: true, boxWidth: 8 } },
+        legend: { position: 'right', labels: { font: baseFont(), padding: 10, usePointStyle: true, boxWidth: 8, generateLabels: getCustomLegendLabels } },
         tooltip: {
           titleFont: baseFont(), bodyFont: baseFont(),
           callbacks: {
