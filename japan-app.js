@@ -603,7 +603,7 @@ function renderInsights() {
     const growth = d.indian[li] - d.indian[fi];
     const cagr = calcCAGR(d.indian[fi], d.indian[li], years);
     insights.push({
-      icon: '📈', cls: 'highlight',
+      cls: 'highlight',
       title: 'Indian Population Growth',
       body: `India's population in Japan grew from <b>${fmtNum(d.indian[fi])}</b> (Jun ${JUNE_YEARS[fi]}) to <b>${fmtNum(d.indian[li])}</b> (Jun ${JUNE_YEARS[li]}), an absolute increase of <b>${fmtNum(growth)}</b> with a CAGR of <b>${cagr !== null ? fmtPct(cagr) : '—'}</b>.`
     });
@@ -616,7 +616,7 @@ function renderInsights() {
     .sort((a, b) => JP_DATA[b].indian[li] - JP_DATA[a].indian[li])[0];
   if (largestCat) {
     insights.push({
-      icon: '🏆', cls: 'gold',
+      cls: 'gold',
       title: 'Largest Residence Category',
       body: `<b>${shortName(largestCat)}</b> is the largest residence category for Indians in Japan with <b>${fmtNum(JP_DATA[largestCat].indian[li])}</b> persons in Jun ${JUNE_YEARS[li]}, accounting for <b>${fmtPct(JP_DATA[largestCat].indian[li] / JP_DATA['Total'].indian[li] * 100)}</b> of all Indian residents.`
     });
@@ -632,7 +632,7 @@ function renderInsights() {
   if (cagrRanked.length > 0) {
     const fastest = cagrRanked[0];
     insights.push({
-      icon: '🚀', cls: 'highlight',
+      cls: 'highlight',
       title: 'Fastest Growing Employment Category',
       body: `<b>${shortName(fastest.name)}</b> is the fastest growing employment category for Indians with a CAGR of <b>${fmtPct(fastest.cagr)}</b> (Jun ${JUNE_YEARS[fi]}–${JUNE_YEARS[li]}). Indian count grew from <b>${fmtNum(JP_DATA[fastest.name].indian[fi])}</b> to <b>${fmtNum(JP_DATA[fastest.name].indian[li])}</b>.`
     });
@@ -644,7 +644,7 @@ function renderInsights() {
     const shareEnd = JP_DATA['Total'].indian[li] / JP_DATA['Total'].total[li] * 100;
     const direction = shareEnd > shareStart ? 'increased' : 'decreased';
     insights.push({
-      icon: '📊', cls: '',
+      cls: '',
       title: "India's Share of Foreign Population",
       body: `India's share of Japan's total foreign population <b>${direction}</b> from <b>${fmtPct(shareStart)}</b> (Jun ${JUNE_YEARS[fi]}) to <b>${fmtPct(shareEnd)}</b> (Jun ${JUNE_YEARS[li]}).`
     });
@@ -657,7 +657,7 @@ function renderInsights() {
     .sort((a, b) => b.share - a.share)[0];
   if (highShareCat) {
     insights.push({
-      icon: '🎯', cls: 'gold',
+      cls: 'gold',
       title: 'Highest Indian Share',
       body: `<b>${shortName(highShareCat.name)}</b> has the highest Indian share of total foreign nationals at <b>${fmtPct(highShareCat.share)}</b> (Jun ${JUNE_YEARS[li]}), with <b>${fmtNum(JP_DATA[highShareCat.name].indian[li])}</b> Indians out of <b>${fmtNum(JP_DATA[highShareCat.name].total[li])}</b> total foreign nationals.`
     });
@@ -668,7 +668,7 @@ function renderInsights() {
   if (JP_DATA['Total'] && empTotal > 0) {
     const empShare = empTotal / JP_DATA['Total'].indian[li] * 100;
     insights.push({
-      icon: '💼', cls: '',
+      cls: '',
       title: 'Employment Composition',
       body: `<b>${fmtNum(empTotal)}</b> Indians (<b>${fmtPct(empShare)}</b> of all Indian residents) hold employment-related residence statuses in Jun ${JUNE_YEARS[li]}. The remaining are in family, education, or other categories.`
     });
@@ -683,7 +683,7 @@ function renderInsights() {
       hcIndian, years
     );
     insights.push({
-      icon: '🏥', cls: 'highlight',
+      cls: 'highlight',
       title: 'Healthcare Presence',
       body: `<b>${fmtNum(hcIndian)}</b> Indians work in healthcare & care roles (Medical + Caregiver) out of <b>${fmtNum(hcTotal)}</b> total foreign healthcare workers. India's share is <b>${fmtPct(hcIndian / hcTotal * 100)}</b> with a CAGR of <b>${hcCagr !== null ? fmtPct(hcCagr) : '—'}</b>.`
     });
@@ -695,7 +695,7 @@ function renderInsights() {
     if (ssw.indian[li] > 0 && ssw.indian[fi] >= 0) {
       const growth = ssw.indian[li] - ssw.indian[fi];
       insights.push({
-        icon: '⚡', cls: 'gold',
+        cls: 'gold',
         title: 'Specified Skilled Worker Program',
         body: `The Specified Skilled Worker category saw dramatic Indian growth from <b>${fmtNum(ssw.indian[fi])}</b> to <b>${fmtNum(ssw.indian[li])}</b> (Jun ${JUNE_YEARS[fi]}–${JUNE_YEARS[li]}), an increase of <b>${fmtNum(growth)}</b>. Total foreign SSW grew from <b>${fmtNum(ssw.total[fi])}</b> to <b>${fmtNum(ssw.total[li])}</b>.`
       });
@@ -706,7 +706,6 @@ function renderInsights() {
   const grid = document.getElementById('insight-grid');
   grid.innerHTML = insights.map(ins =>
     `<div class="insight-card ${ins.cls}">
-       <div class="insight-icon">${ins.icon}</div>
        <div class="insight-title">${ins.title}</div>
        <div class="insight-body">${ins.body}</div>
      </div>`

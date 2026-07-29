@@ -96,9 +96,15 @@ a{color:inherit;}
 .exec-cagr{
   display:inline-flex;align-items:center;gap:4px;
   background:#E8F5E9;color:#2E7D32;font-size:11.5px;font-weight:700;
-  padding:3px 10px;border-radius:12px;margin-bottom:14px;
+  padding:3px 10px;border-radius:12px;
 }
 .exec-cagr.negative{background:#FFEBEE;color:#C62828;}
+.exec-cagr-period{
+  display:inline-flex;align-items:center;
+  background:#F6F9FA;color:var(--gray);border:1px solid var(--card-border);
+  font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:12px;
+}
+.exec-cagr-wrap{display:flex;gap:8px;margin-bottom:14px;}
 .exec-secondary{
   display:grid;grid-template-columns:1fr 1fr;gap:8px;
   padding-top:12px;border-top:1px solid var(--card-border);
@@ -166,7 +172,6 @@ a{color:inherit;}
 }
 .insight-card.gold{border-left-color:var(--gold);}
 .insight-card.highlight{border-left-color:#2E7D32;}
-.insight-icon{font-size:22px;margin-bottom:8px;}
 .insight-title{font-size:13px;font-weight:700;color:var(--teal-dark);margin-bottom:6px;}
 .insight-body{font-size:12.5px;color:#3B4A50;line-height:1.6;}
 .insight-body b{color:var(--teal-dark);}
@@ -210,7 +215,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <span class="hero-flag">🇯🇵</span>
   <div class="hero-text">
     <h1>Japan</h1>
-    <p class="subtitle">Indian migration and workforce insights — residence status data, Jun 2021 – Jun 2025. Growth measured by CAGR.</p>
+    <p class="subtitle">Indian migration and workforce insights — residence status data, Jun 2021 – Jun 2025.</p>
   </div>
 </header>
 
@@ -225,7 +230,10 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
       <span class="exec-primary-value" id="exec-all-indian">—</span>
       <span class="exec-primary-label">Indians</span>
     </div>
-    <div class="exec-cagr" id="exec-all-cagr">CAGR —</div>
+    <div class="exec-cagr-wrap">
+      <div class="exec-cagr" id="exec-all-cagr">CAGR —</div>
+      <div class="exec-cagr-period">(2021-2025)</div>
+    </div>
     <div class="exec-secondary">
       <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-all-foreign">—</div></div>
       <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-all-share">—</div></div>
@@ -241,7 +249,10 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
       <span class="exec-primary-value" id="exec-emp-indian">—</span>
       <span class="exec-primary-label">Indians</span>
     </div>
-    <div class="exec-cagr" id="exec-emp-cagr">CAGR —</div>
+    <div class="exec-cagr-wrap">
+      <div class="exec-cagr" id="exec-emp-cagr">CAGR —</div>
+      <div class="exec-cagr-period">(2021-2025)</div>
+    </div>
     <div class="exec-secondary">
       <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-emp-foreign">—</div></div>
       <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-emp-share">—</div></div>
@@ -257,7 +268,10 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
       <span class="exec-primary-value" id="exec-health-indian">—</span>
       <span class="exec-primary-label">Indians</span>
     </div>
-    <div class="exec-cagr" id="exec-health-cagr">CAGR —</div>
+    <div class="exec-cagr-wrap">
+      <div class="exec-cagr" id="exec-health-cagr">CAGR —</div>
+      <div class="exec-cagr-period">(2021-2025)</div>
+    </div>
     <div class="exec-secondary">
       <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-health-foreign">—</div></div>
       <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-health-share">—</div></div>
@@ -278,7 +292,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <div class="tab-panel active" id="tab-overview">
     <div class="section-head">
       <span class="eyebrow">Population Trends</span>
-      <h2>Indian & Foreign Population in Japan <span class="tag">June data only</span></h2>
+      <h2>Indian & Foreign Population in Japan</h2>
       <p class="section-intro">Tracking the Indian community's growth in Japan alongside total foreign population trends, using June snapshot data for consistency.</p>
     </div>
     <div class="chart-grid">
