@@ -208,7 +208,9 @@ function getCustomLegendLabels(chart) {
   const labels = orig(chart);
   labels.forEach(label => {
     label.textDecoration = 'none';
-    label.fontColor = label.hidden ? '#C62828' : '#2E7D32';
+    label.fontColor = '#1A2327'; // Keep text default color
+    // Use emoji to act as the red/green label indicator
+    label.text = (label.hidden ? '🔴 ' : '🟢 ') + label.text;
   });
   return labels;
 }
