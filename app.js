@@ -52,6 +52,40 @@ function initChartStates() {
   });
 }
 
+function saveState() {
+  const serializableState = {};
+  for (const id in cState) {
+    serializableState[id] = {
+      countries: Array.from(cState[id].countries),
+      yearMin: cState[id].yearMin,
+      yearMax: cState[id].yearMax,
+      selectedYear: cState[id].selectedYear
+    };
+  }
+  localStorage.setItem('gati_cState', JSON.stringify(serializableState));
+  const activeTabBtn = document.querySelector('.tab-btn.active');
+  if (activeTabBtn) {
+    localStorage.setItem('gati_activeTab', activeTabBtn.dataset.tab);
+  }
+}
+
+function loadState() {
+  const savedStateStr = localStorage.getItem('gati_cState');
+  if (savedStateStr) {
+    try {
+      const savedState = JSON.parse(savedStateStr);
+      for (const id in savedState) {
+        if (cState[id]) {
+          cState[id].countries = new Set(savedState[id].countries);
+          cState[id].yearMin = savedState[id].yearMin;
+          cState[id].yearMax = savedState[id].yearMax;
+          cState[id].selectedYear = savedState[id].selectedYear;
+        }
+      }
+    } catch (e) { console.error('Failed to parse saved cState', e); }
+  }
+}
+
 /* ---- Chart-specific accessors ---- */
 function chartCountries(id) {
   return getTableCountries(CHARTS[id].table).filter(c => cState[id].countries.has(c));
@@ -338,6 +372,7 @@ function buildChartFilters() {
         if (st.countries.has(c)) st.countries.delete(c); else st.countries.add(c);
         btn.classList.toggle('active');
         renderChart(id);
+        saveState();
       };
       el.appendChild(btn);
     });
@@ -369,11 +404,13 @@ function buildChartFilters() {
           st.yearMin = parseInt(from.value);
           if (st.yearMin > st.yearMax) { st.yearMax = st.yearMin; to.value = st.yearMax; }
           renderChart(id);
+          saveState();
         };
         to.onchange = () => {
           st.yearMax = parseInt(to.value);
           if (st.yearMax < st.yearMin) { st.yearMin = st.yearMax; from.value = st.yearMin; }
           renderChart(id);
+          saveState();
         };
 
         el.appendChild(from);
@@ -393,6 +430,7 @@ function buildChartFilters() {
         sel.onchange = () => {
           st.selectedYear = parseInt(sel.value);
           renderChart(id);
+          saveState();
         };
         el.appendChild(sel);
       }
@@ -414,6 +452,7 @@ function initTabs() {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      saveState();
       /* Re-render charts in newly visible tab (Chart.js needs visible canvas for sizing) */
       requestAnimationFrame(() => {
         const charts = TABS_CHARTS[btn.dataset.tab];
@@ -435,16 +474,24 @@ function renderKPIs() {
   renderFixedYearKPI('kpi-emp-foreign', 'Employment_Stock', 'Total Foreigners', 2024);
   renderFixedYearShareKPI('kpi-emp-share', 'Employment_Stock', 2024);
 
-  /* Healthcare — unchanged, uses latest year */
-  renderKPI('kpi-health-stock', 'Healthcare_Nurses_Stock', 'Indian');
-  renderShareKPI('kpi-health-share', 'Healthcare_Nurses_Stock');
+  /* Healthcare — use Healthcare_Nurses_Stock year 2024 */
+  renderFixedYearKPI('kpi-health-indian', 'Healthcare_Nurses_Stock', 'Indian', 2024);
+  renderFixedYearKPI('kpi-health-foreign', 'Healthcare_Nurses_Stock', 'Total Foreigners', 2024);
+  renderFixedYearShareKPI('kpi-health-share', 'Healthcare_Nurses_Stock', 2024);
 }
 /* ---- Master init (called after DATA is populated) ---- */
 function initDashboard(){
   initChartStates();
+  loadState();
   initTabs();
   buildChartFilters();
   renderKPIs();
   /* Render only the active tab's charts on init */
-  TABS_CHARTS.population.forEach(id => renderChart(id));
+  const activeTab = localStorage.getItem('gati_activeTab') || 'population';
+  const tabBtn = document.querySelector(`.tab-btn[data-tab="${activeTab}"]`);
+  if (tabBtn) {
+    tabBtn.click();
+  } else {
+    TABS_CHARTS.population.forEach(id => renderChart(id));
+  }
 }
