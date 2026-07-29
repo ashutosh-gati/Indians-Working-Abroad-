@@ -495,7 +495,7 @@ function renderWorkforceCharts() {
     }
   });
   document.getElementById('note-jp-emp-trend').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Top 5 employment categories by Indian count';
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Based on top 5 count as of Jun ' + JUNE_YEARS[li];
 }
 
 /* ---- Healthcare Charts ---- */
