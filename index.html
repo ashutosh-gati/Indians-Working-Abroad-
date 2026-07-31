@@ -145,7 +145,7 @@ a{color:inherit;}
 }
 .data-notes{
   background:var(--white);border-radius:10px;border:1px solid var(--card-border);
-  padding:30px 40px;max-width:800px;
+  padding:30px 40px;max-width:960px;
 }
 .data-notes h2{color:var(--teal);font-size:20px;margin-bottom:16px;}
 .data-notes ul{margin:0;padding-left:20px;font-size:13.5px;line-height:1.75;color:#3B4A50;}
@@ -182,6 +182,113 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
 .country-nav-item.active{background:var(--teal);color:var(--white);}
 .country-flag{font-size:18px;line-height:1;}
 
+/* ---------- Data Notes — enriched content ---------- */
+.dn-intro{
+  font-size:14px;color:#3B4A50;line-height:1.7;max-width:860px;margin-bottom:24px;
+}
+.dn-section{
+  margin-bottom:28px;
+}
+.dn-section-title{
+  font-size:18px;font-weight:700;color:var(--teal);margin:0 0 14px;
+  padding:0 0 10px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:8px;
+}
+.dn-section-title .dn-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:50%;background:var(--teal);color:var(--white);
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.dn-section-subtitle{
+  font-size:14.5px;font-weight:700;color:var(--teal-dark);margin:16px 0 8px;
+}
+.dn-text{
+  font-size:13.5px;color:#3B4A50;line-height:1.7;margin:0 0 12px;
+}
+.dn-text b,.dn-text strong{color:var(--teal-dark);}
+.dn-text em{color:var(--gray);font-style:italic;}
+.dn-grid-2col{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;
+}
+.dn-card{
+  background:var(--white);border:1px solid var(--card-border);border-top:3px solid var(--teal-light);
+  border-radius:10px;padding:16px 18px;
+}
+.dn-card-title{
+  font-size:13.5px;font-weight:700;color:var(--teal);margin-bottom:6px;
+}
+.dn-card-text{
+  font-size:13px;color:#3B4A50;line-height:1.6;
+}
+.dn-note-callout{
+  background:#FFF7E6;border:1px dashed var(--gold);border-radius:8px;
+  padding:12px 16px;font-size:12.5px;color:#5C4300;line-height:1.6;margin:14px 0;
+}
+.dn-note-callout b{color:#8C6A1F;}
+.dn-method-list{
+  display:flex;flex-direction:column;gap:10px;margin:12px 0;
+}
+.dn-method-item{
+  background:var(--white);border:1px solid var(--card-border);
+  border-left:3px solid var(--teal);border-radius:8px;padding:14px 16px;font-size:13px;
+  color:#3B4A50;line-height:1.6;
+}
+.dn-method-item strong{color:var(--teal);}
+.dn-method-item em{color:var(--gray);}
+.dn-table{
+  width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;
+  border:1px solid var(--card-border);border-radius:8px;overflow:hidden;
+}
+.dn-table th{
+  background:var(--teal);color:var(--white);font-weight:600;font-size:12px;
+  text-transform:uppercase;letter-spacing:.3px;padding:10px 14px;text-align:left;
+}
+.dn-table td{
+  padding:10px 14px;border-bottom:1px solid var(--card-border);color:#3B4A50;
+}
+.dn-table td strong{color:var(--teal-dark);}
+.dn-table tr:last-child td{border-bottom:none;}
+.dn-table tr:hover td{background:#F0F8F9;}
+.dn-label{
+  font-size:11px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;
+  letter-spacing:.8px;margin:18px 0 8px;
+}
+.dn-links-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:8px 0 18px;
+}
+.dn-link-item{
+  background:var(--white);border:1px solid var(--card-border);padding:10px 14px;
+  border-radius:8px;font-size:13px;text-decoration:none;color:var(--teal-dark);
+  font-weight:500;display:flex;justify-content:space-between;align-items:center;
+  transition:all .15s ease;
+}
+.dn-link-item:hover{
+  border-color:var(--teal);background:#F0F8F9;color:var(--teal);
+  box-shadow:0 2px 8px rgba(0,107,118,.08);
+}
+.dn-link-item span{font-size:11px;color:var(--gray);}
+.dn-footer-note{
+  border-top:1px solid var(--card-border);padding-top:18px;margin-top:10px;
+  font-size:13px;color:var(--gray);line-height:1.6;
+}
+.dn-footer-note b{color:var(--teal-dark);}
+.dn-accordion{
+  background:var(--white);border:1px solid var(--card-border);border-radius:8px;
+  margin:10px 0;overflow:hidden;
+}
+.dn-accordion summary{
+  padding:12px 16px;font-size:13.5px;font-weight:600;color:var(--teal);
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+  transition:background .12s;
+}
+.dn-accordion summary:hover{background:#F0F8F9;}
+.dn-accordion summary::before{
+  content:'▸';font-size:12px;color:var(--gold);transition:transform .2s;
+}
+.dn-accordion[open] summary::before{transform:rotate(90deg);}
+.dn-accordion .dn-accordion-body{
+  padding:0 16px 14px;border-top:1px solid var(--card-border);
+}
+
 @media (max-width:900px){
   .chart-grid{grid-template-columns:1fr;}
   .site-header{padding:0 18px 0 18px;gap:16px;height:68px;}
@@ -190,6 +297,9 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   .topbar,.section-nav,.tab-panel,footer{padding-left:18px;padding-right:18px;}
   .data-notes{padding:20px;}
   .country-nav-btn{font-size:11.5px;padding:7px 14px;}
+  .dn-grid-2col{grid-template-columns:1fr;}
+  .dn-table{font-size:12px;}
+  .dn-table th,.dn-table td{padding:8px 10px;}
 }
 </style>
 </head>
@@ -369,13 +479,179 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <!-- ================= DATA NOTES TAB ================= -->
   <div class="tab-panel" id="tab-notes">
     <div class="data-notes">
-      <h2>Data Notes</h2>
-      <ul>
-        <li><b>Stock vs Flow:</b> Stock = a point-in-time total (e.g., total Indians resident as of year-end). Flow = new arrivals/entries during that calendar year. Different units — never combined on the same chart axis.</li>
-        <li><b>Indian share of a country's foreign population/workforce</b> = Indian ÷ that same country's own Total Foreigners figure, for the same year. It is never pooled or averaged using other countries' totals in the denominator.</li>
-        <li><b>"Avg. Indian share" KPIs</b> are a simple, unweighted average of each individual country's own share — not a single global percentage weighted by population size.</li>
-        <li>Each table has its own country list, which differs because the underlying data coverage varies by country and year. Every chart lists exactly which countries are reflected based on the active filters and available data.</li>
-      </ul>
+      <div class="section-head">
+        <span class="eyebrow">Reference</span>
+        <h2>Data Notes <span class="tag">Indian Global Mobility Dashboard</span></h2>
+        <p class="section-intro">This dashboard tracks Indians living and working abroad across 10 countries: Canada, France, Germany, Italy, Japan, Poland, South Korea, Spain, the United Kingdom, and the United States. We measure population, employment, and healthcare for each country, shown two ways: a snapshot (one date) and a flow (over one year).</p>
+      </div>
+
+      <!-- Quick-reference bullets (original notes preserved) -->
+      <div class="dn-note-callout" style="margin-top:18px;">
+        <b>Quick Reference — Key Definitions</b>
+        <ul style="margin:8px 0 0;padding-left:18px;font-size:12.5px;line-height:1.7;">
+          <li><b>Stock vs Flow:</b> Stock = a point-in-time total (e.g., total Indians resident as of year-end). Flow = new arrivals/entries during that calendar year. Different units — never combined on the same chart axis.</li>
+          <li><b>Indian share of a country's foreign population/workforce</b> = Indian ÷ that same country's own Total Foreigners figure, for the same year. It is never pooled or averaged using other countries' totals in the denominator.</li>
+          <li><b>"Avg. Indian share" KPIs</b> are a simple, unweighted average of each individual country's own share — not a single global percentage weighted by population size.</li>
+          <li>Each table has its own country list, which differs because the underlying data coverage varies by country and year. Every chart lists exactly which countries are reflected based on the active filters and available data.</li>
+        </ul>
+      </div>
+
+      <!-- Section 1: How the data was sourced -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">1</span> How the data was sourced</h3>
+        <p class="dn-text">No single international database covers all countries and all indicators. So we combined two types of sources:</p>
+        <div class="dn-grid-2col">
+          <div class="dn-card">
+            <div class="dn-card-title">🏛️ National official sources</div>
+            <div class="dn-card-text">Direct data from each country's government: statistics offices, census operations, central registers, immigration departments. Examples: Statistics Canada, Destatis (Germany), ISA (Japan), ONS (UK), US Census Bureau, INSEE (France), ISTAT (Italy), Statistics Poland, Statistics Korea, INE (Spain).</div>
+          </div>
+          <div class="dn-card">
+            <div class="dn-card-title">🌐 International organizations</div>
+            <div class="dn-card-text">Multi-country databases: Eurostat (for European residence permits), the OECD (for standardized international migration and healthcare workforce series).</div>
+          </div>
+        </div>
+        <p class="dn-text">Every number in this dashboard comes from one of these official sources. Nothing is estimated or averaged across sources.</p>
+      </div>
+
+      <!-- Section 2: What "year" means -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">2</span> What "year" means in this dashboard</h3>
+        <p class="dn-text">The same year label (e.g., "2024") means different things in different countries, depending on how that country records its statistics.</p>
+
+        <details class="dn-accordion">
+          <summary>Flow data (new arrivals, permits issued)</summary>
+          <div class="dn-accordion-body">
+            <p class="dn-text" style="margin-top:12px;">Most countries use <strong>calendar year</strong> (January 1 – December 31). For example: UK long-term international migration, Eurostat first permit issuances, and statistics from Canada, France, Germany, Italy, Japan, Poland, South Korea, Spain, and USA.</p>
+            <div class="dn-note-callout"><b>Exception:</b> US Department of State visa issuance follows the US fiscal year (October 1 – September 30).</div>
+          </div>
+        </details>
+
+        <details class="dn-accordion" open>
+          <summary>Stock data (how many are there now)</summary>
+          <div class="dn-accordion-body">
+            <p class="dn-text" style="margin-top:12px;">Stock figures are snapshots taken on specific reference dates:</p>
+            <table class="dn-table">
+              <thead>
+                <tr><th>Reference Date</th><th>Countries</th><th>What It Shows</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>December 31</strong></td><td>Germany (AZR), Japan (ISA), Eurostat permits</td><td>Year-end count</td></tr>
+                <tr><td><strong>January 1</strong></td><td>France (INSEE), Italy (ISTAT), Spain (INE)</td><td>New Year count</td></tr>
+                <tr><td><strong>June 30</strong></td><td>Germany (BA employment), France (Ministry permits)</td><td>Mid-year count</td></tr>
+                <tr><td><strong>Census date</strong></td><td>Canada (May 11, 2021)</td><td>One-time snapshot</td></tr>
+                <tr><td><strong>Annual average</strong></td><td>Spain (Social Security), USA (surveys)</td><td>Average across the year</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <div class="dn-note-callout"><b>Core rule:</b> Stocks (point-in-time counts) and flows (annual movements) are fundamentally different units. Never combine them on the same chart.</div>
+      </div>
+
+      <!-- Section 3: Important counting differences -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">3</span> Important counting differences</h3>
+
+        <h4 class="dn-section-subtitle">Matching sources</h4>
+        <p class="dn-text">When we show "India's share of foreigners" (e.g., "Indians are 2.2% of foreigners"), the Indian number and the total foreigner number always come from the same source and year. We never mix sources in one calculation.</p>
+
+        <h4 class="dn-section-subtitle">The four primary counting bases</h4>
+        <p class="dn-text">Across the 10 countries, foreign populations are categorized using four distinct methodologies:</p>
+
+        <div class="dn-method-list">
+          <div class="dn-method-item">
+            <strong>1. Citizenship (Passport holders):</strong> Germany, Italy, Japan, South Korea, Poland, UK, and France (for visas/permits).<br>
+            <em>Definition:</em> People holding that country's passport.
+          </div>
+          <div class="dn-method-item">
+            <strong>2. Country of birth:</strong> Canada, France (INSEE Census), USA.<br>
+            <em>Definition:</em> People born in that country (including those who became citizens).<br>
+            <em>Note: France uses this for INSEE data but uses citizenship basis for Eurostat permits.</em>
+          </div>
+          <div class="dn-method-item">
+            <strong>3. Work permits vs. actual employment:</strong><br>
+            • <em>Permits:</em> Canada, France, Italy, Poland (GUS), South Korea<br>
+            • <em>Confirmed job:</em> Germany, Spain, Poland (ZUS), USA<br>
+            <em>Definition:</em> Permit countries count authorization to work. Employment countries count people actually working (from payroll or surveys). These two measures are not the same and should never be compared directly.
+          </div>
+          <div class="dn-method-item">
+            <strong>4. Country of training (healthcare only):</strong> OECD data (All countries except Japan and USA).<br>
+            <em>Definition:</em> Medical professionals counted by where they earned their degree, not their citizenship.
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Important notes before reading charts -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">4</span> Important notes before reading charts</h3>
+        <div class="dn-note-callout"><b>Before comparing Indian employment across countries:</b> Check which type of count each country uses (Section 3). Different counting methods mean the numbers are not directly comparable. For example, Germany and Spain count actual employment; Canada, France, Italy, and Poland count work permits.</div>
+        <div class="dn-note-callout"><b>Missing a country from a chart?</b> It likely means that data wasn't available for that year. Full details in the Methodology Note.</div>
+        <div class="dn-note-callout"><b>Need exact reference dates?</b> See Section 2 above.</div>
+        <div class="dn-note-callout"><b>Want to understand one country deeply?</b> See the full Methodology Note, which explains each country's sources in detail.</div>
+      </div>
+
+      <!-- Section 5: Sources by country -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">5</span> Sources by country</h3>
+        <table class="dn-table">
+          <thead>
+            <tr><th>Country</th><th>National Sources</th><th>International Benchmark</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Canada</strong></td><td>Statistics Canada, Immigration Refugees &amp; Citizenship Canada (IRCC)</td><td>OECD (IMD, HWMI)</td></tr>
+            <tr><td><strong>France</strong></td><td>INSEE, Ministry of Interior (AGDREF/DSED)</td><td>Eurostat, OECD (HWMI), UN DESA</td></tr>
+            <tr><td><strong>Germany</strong></td><td>Destatis (Federal Statistics), Federal Employment Agency (BA), Bundesärztekammer</td><td>Eurostat, OECD (HWMI)</td></tr>
+            <tr><td><strong>Italy</strong></td><td>ISTAT (National Statistics)</td><td>Eurostat, OECD (HWMI)</td></tr>
+            <tr><td><strong>Japan</strong></td><td>ISA (Immigration Services Agency)</td><td>ISA data only</td></tr>
+            <tr><td><strong>Poland</strong></td><td>Statistics Poland (GUS), Social Insurance Institution (ZUS)</td><td>Eurostat, OECD (IMD, HWMI)</td></tr>
+            <tr><td><strong>South Korea</strong></td><td>Statistics Korea (KOSTAT), Ministry of Justice (KIS/MOJ)</td><td>OECD (IMD, HWMI)</td></tr>
+            <tr><td><strong>Spain</strong></td><td>INE (National Statistics Institute), Social Security (Seguridad Social)</td><td>Eurostat, OECD (HWMI)</td></tr>
+            <tr><td><strong>United Kingdom</strong></td><td>ONS (Office for National Statistics), Home Office</td><td>Eurostat (historical), OECD (IMD, HWMI)</td></tr>
+            <tr><td><strong>United States</strong></td><td>US Census Bureau (ACS PUMS), Bureau of Labor Statistics (BLS), State Department, MPI</td><td>Census and BLS data only</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 6: Source organization links -->
+      <div class="dn-section">
+        <h3 class="dn-section-title"><span class="dn-num">6</span> Source organization links</h3>
+
+        <div class="dn-label">International organizations</div>
+        <div class="dn-links-grid">
+          <a href="https://www.oecd.org" target="_blank" class="dn-link-item">OECD <span>↗</span></a>
+          <a href="https://ec.europa.eu/eurostat" target="_blank" class="dn-link-item">Eurostat <span>↗</span></a>
+          <a href="https://www.un.org/en/desa" target="_blank" class="dn-link-item">UN DESA <span>↗</span></a>
+        </div>
+
+        <div class="dn-label">National statistics agencies &amp; databases</div>
+        <div class="dn-links-grid">
+          <a href="https://open.canada.ca/en" target="_blank" class="dn-link-item">IRCC (Canada) <span>↗</span></a>
+          <a href="https://www.statcan.gc.ca" target="_blank" class="dn-link-item">Statistics Canada <span>↗</span></a>
+          <a href="https://www.insee.fr/fr/statistiques/2381757" target="_blank" class="dn-link-item">INSEE (France) <span>↗</span></a>
+          <a href="https://www.immigration.interieur.gouv.fr" target="_blank" class="dn-link-item">Ministry of Interior (France) <span>↗</span></a>
+          <a href="https://www.destatis.de" target="_blank" class="dn-link-item">Destatis (Germany) <span>↗</span></a>
+          <a href="https://www.arbeitsagentur.de" target="_blank" class="dn-link-item">BA Employment Agency (Germany) <span>↗</span></a>
+          <a href="https://www.istat.it" target="_blank" class="dn-link-item">ISTAT (Italy) <span>↗</span></a>
+          <a href="https://www.moj.go.jp/isa/" target="_blank" class="dn-link-item">ISA (Japan) <span>↗</span></a>
+          <a href="https://stat.gov.pl" target="_blank" class="dn-link-item">Statistics Poland (GUS) <span>↗</span></a>
+          <a href="https://www.zus.pl" target="_blank" class="dn-link-item">ZUS (Poland) <span>↗</span></a>
+          <a href="https://kosis.kr" target="_blank" class="dn-link-item">KOSTAT (Korea) <span>↗</span></a>
+          <a href="https://www.ine.es" target="_blank" class="dn-link-item">INE (Spain) <span>↗</span></a>
+          <a href="https://www.inclusion.gob.es" target="_blank" class="dn-link-item">Ministry of Inclusion (Spain) <span>↗</span></a>
+          <a href="https://www.ons.gov.uk" target="_blank" class="dn-link-item">ONS (UK) <span>↗</span></a>
+          <a href="https://www.gov.uk/government/organisations/home-office" target="_blank" class="dn-link-item">Home Office (UK) <span>↗</span></a>
+          <a href="https://www.census.gov" target="_blank" class="dn-link-item">US Census Bureau <span>↗</span></a>
+          <a href="https://www.bls.gov" target="_blank" class="dn-link-item">Bureau of Labor Statistics (USA) <span>↗</span></a>
+          <a href="https://www.migrationpolicy.org/programs/data-hub" target="_blank" class="dn-link-item">MPI Data Hub (USA) <span>↗</span></a>
+        </div>
+      </div>
+
+      <!-- Methodology footer -->
+      <div class="dn-footer-note">
+        <b>Full methodology</b><br>
+        For detailed explanations of every source, country-by-country gaps, year spans, and data limitations, see the separate Methodology Note for All Countries document.
+      </div>
+
     </div>
   </div>
 </main>
