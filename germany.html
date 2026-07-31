@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GATI — Japan Country Dashboard</title>
-<meta name="description" content="GATI Japan Country Dashboard — Indian migration trends, workforce composition, and healthcare insights based on Japan residence status data.">
+<title>GATI — Germany Country Dashboard</title>
+<meta name="description" content="GATI Germany Country Dashboard — Indian population, migration flows, employment, and healthcare workforce insights based on official German and EU statistics.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -115,12 +115,13 @@ a{color:inherit;}
 /* ---------- Tab nav ---------- */
 .section-nav{
   display:flex;gap:0;background:var(--teal-dark);padding:0 40px;
-  font-size:13.5px;font-weight:600;
+  font-size:13.5px;font-weight:600;overflow-x:auto;
 }
 .tab-btn{
   background:none;border:none;color:var(--teal-light);
   padding:13px 22px;font-family:var(--font);font-size:13.5px;font-weight:600;
   cursor:pointer;border-bottom:3px solid transparent;transition:all .15s ease;
+  white-space:nowrap;
 }
 .tab-btn:hover{color:var(--gold-light);}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(255,255,255,.05);}
@@ -147,7 +148,7 @@ a{color:inherit;}
 }
 .chart-card.wide{grid-column:1 / -1;}
 .chart-card h3{font-size:14.5px;font-weight:700;color:var(--teal-dark);}
-.chart-note{font-size:12px;color:var(--gray);margin-top:5px;margin-bottom:10px;line-height:1.5;min-height:20px;}
+.chart-note{font-size:11.5px;color:var(--gray);margin-top:5px;margin-bottom:10px;line-height:1.5;min-height:18px;}
 .chart-canvas-wrap{position:relative;height:300px;}
 .chart-canvas-wrap.tall{height:400px;}
 
@@ -199,17 +200,17 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <a href="index.html" style="display:flex; align-items:center; text-decoration:none;">
     <img src="gati logo final.png" alt="GATI — Global Access to Talent from India" class="site-header-logo">
   </a>
-  <span class="site-header-title">Japan Country Dashboard</span>
+  <span class="site-header-title">Germany Country Dashboard</span>
   <div class="country-nav" id="countryNav">
     <button class="country-nav-btn" onclick="this.parentElement.classList.toggle('open')">Country Profiles</button>
     <div class="country-nav-menu">
       <a href="index.html" class="country-nav-item">
         <span class="country-flag">🌐</span> Overview
       </a>
-      <a href="japan.html" class="country-nav-item active">
+      <a href="japan.html" class="country-nav-item">
         <span class="country-flag">🇯🇵</span> Japan
       </a>
-      <a href="germany.html" class="country-nav-item">
+      <a href="germany.html" class="country-nav-item active">
         <span class="country-flag">🇩🇪</span> Germany
       </a>
     </div>
@@ -217,37 +218,37 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
 </div>
 
 <header class="topbar">
-  <span class="hero-flag">🇯🇵</span>
+  <span class="hero-flag">🇩🇪</span>
   <div class="hero-text">
-    <h1>Japan</h1>
-    <p class="subtitle">Indian migration and workforce insights — residence status data, Jun 2021 – Jun 2025.</p>
+    <h1>Germany</h1>
+    <p class="subtitle">Indian population, migration flows, employment, and healthcare workforce — multi-source official data from Destatis, Eurostat, Federal Employment Agency & OECD.</p>
   </div>
 </header>
 
 <!-- ===== Executive KPI Strip ===== -->
 <div class="exec-strip">
-  <div class="exec-card" id="exec-all">
+  <div class="exec-card" id="exec-pop">
     <div class="exec-card-header">
-      <span class="exec-card-title">All Residents</span>
-      <span class="exec-card-period" id="exec-all-period">—</span>
+      <span class="exec-card-title">Indian Population (Stock)</span>
+      <span class="exec-card-period" id="exec-pop-period">—</span>
     </div>
     <div class="exec-primary">
-      <span class="exec-primary-value" id="exec-all-indian">—</span>
+      <span class="exec-primary-value" id="exec-pop-indian">—</span>
       <span class="exec-primary-label">Indians</span>
     </div>
     <div class="exec-cagr-wrap">
-      <div class="exec-cagr" id="exec-all-cagr">CAGR —</div>
-      <div class="exec-cagr-period">(2021-2025)</div>
+      <div class="exec-cagr" id="exec-pop-cagr">CAGR —</div>
+      <div class="exec-cagr-period" id="exec-pop-cagr-period">—</div>
     </div>
     <div class="exec-secondary">
-      <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-all-foreign">—</div></div>
-      <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-all-share">—</div></div>
+      <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-pop-foreign">—</div></div>
+      <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-pop-share">—</div></div>
     </div>
   </div>
 
   <div class="exec-card" id="exec-emp">
     <div class="exec-card-header">
-      <span class="exec-card-title">Employment Population</span>
+      <span class="exec-card-title">Indian Employment (BA)</span>
       <span class="exec-card-period" id="exec-emp-period">—</span>
     </div>
     <div class="exec-primary">
@@ -256,7 +257,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
     </div>
     <div class="exec-cagr-wrap">
       <div class="exec-cagr" id="exec-emp-cagr">CAGR —</div>
-      <div class="exec-cagr-period">(2021-2025)</div>
+      <div class="exec-cagr-period" id="exec-emp-cagr-period">—</div>
     </div>
     <div class="exec-secondary">
       <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-emp-foreign">—</div></div>
@@ -266,7 +267,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
 
   <div class="exec-card" id="exec-health">
     <div class="exec-card-header">
-      <span class="exec-card-title">Healthcare & Care Workers</span>
+      <span class="exec-card-title">Indian Physicians (Stock)</span>
       <span class="exec-card-period" id="exec-health-period">—</span>
     </div>
     <div class="exec-primary">
@@ -275,82 +276,119 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
     </div>
     <div class="exec-cagr-wrap">
       <div class="exec-cagr" id="exec-health-cagr">CAGR —</div>
-      <div class="exec-cagr-period">(2021-2025)</div>
+      <div class="exec-cagr-period" id="exec-health-cagr-period">—</div>
     </div>
     <div class="exec-secondary">
-      <div><div class="exec-metric-label">Total Foreign</div><div class="exec-metric-value" id="exec-health-foreign">—</div></div>
-      <div><div class="exec-metric-label">India's Share</div><div class="exec-metric-value" id="exec-health-share">—</div></div>
+      <div><div class="exec-metric-label">Total Physicians</div><div class="exec-metric-value" id="exec-health-total">—</div></div>
+      <div><div class="exec-metric-label">Nurse Inflow (Latest)</div><div class="exec-metric-value" id="exec-health-nurse">—</div></div>
     </div>
   </div>
 </div>
 
 <!-- ===== Tab Navigation ===== -->
 <nav class="section-nav" id="sectionNav">
-  <button class="tab-btn active" data-tab="overview">Overview</button>
-  <button class="tab-btn" data-tab="workforce">Workforce</button>
+  <button class="tab-btn active" data-tab="population">Population</button>
+  <button class="tab-btn" data-tab="migration">Migration Flows</button>
+  <button class="tab-btn" data-tab="employment">Employment</button>
   <button class="tab-btn" data-tab="healthcare">Healthcare</button>
   <button class="tab-btn" data-tab="insights">Key Insights</button>
 </nav>
 
 <main>
-  <!-- ================= OVERVIEW TAB ================= -->
-  <div class="tab-panel active" id="tab-overview">
+  <!-- ================= POPULATION TAB ================= -->
+  <div class="tab-panel active" id="tab-population">
     <div class="section-head">
-      <span class="eyebrow">Population Trends</span>
-      <h2>Indian & Foreign Population in Japan</h2>
-      <p class="section-intro">Tracking the Indian community's growth in Japan alongside total foreign population trends, using June snapshot data for consistency.</p>
+      <span class="eyebrow">Stock Data</span>
+      <h2>Indian & Foreign Population in Germany <span class="tag">All purposes</span></h2>
+      <p class="section-intro">Indian citizens registered in Germany for any purpose (work, study, family, humanitarian) alongside total foreign population trends.</p>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Indian Population in Japan — Trend</h3>
-        <p class="chart-note" id="note-jp-indian-trend"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-jp-indian-trend"></canvas></div>
+        <h3>Indian Citizens in Germany — Trend</h3>
+        <p class="chart-note" id="note-de-indian-stock"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-indian-stock"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Total Foreign Population in Japan — Trend</h3>
-        <p class="chart-note" id="note-jp-foreign-trend"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-jp-foreign-trend"></canvas></div>
+        <h3>Total Foreign Population — Trend</h3>
+        <p class="chart-note" id="note-de-foreign-stock"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-foreign-stock"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>India's Share of Total Foreign Population — Trend</h3>
-        <p class="chart-note" id="note-jp-share-trend"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-jp-share-trend"></canvas></div>
+        <h3>India's Share of Foreign Population — Trend</h3>
+        <p class="chart-note" id="note-de-share-stock"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-share-stock"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Top Residence Categories by Indian Count</h3>
-        <p class="chart-note" id="note-jp-top-categories"></p>
-        <div class="chart-canvas-wrap tall"><canvas id="chart-jp-top-categories"></canvas></div>
+        <h3>Employment Permits — Indian vs All Non-EU (Stock)</h3>
+        <p class="chart-note" id="note-de-euro-permits-stock"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-euro-permits-stock"></canvas></div>
       </div>
     </div>
   </div>
 
-  <!-- ================= WORKFORCE TAB ================= -->
-  <div class="tab-panel" id="tab-workforce">
+  <!-- ================= MIGRATION FLOWS TAB ================= -->
+  <div class="tab-panel" id="tab-migration">
     <div class="section-head">
-      <span class="eyebrow">Workforce Analysis</span>
-      <h2>Indian Workforce Composition <span class="tag">Employment categories</span></h2>
-      <p class="section-intro">Detailed breakdown of Indian workers across Japan's employment residence categories — distribution, growth, and India's share of the foreign workforce.</p>
+      <span class="eyebrow">Flow Data</span>
+      <h2>Migration Flows <span class="tag">Annual & Monthly</span></h2>
+      <p class="section-intro">Cross-border movements of Indian citizens and total foreign nationals — arrivals, departures, and net migration balance.</p>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Residence Status Distribution — Indian Population</h3>
-        <p class="chart-note" id="note-jp-distribution"></p>
-        <div class="chart-canvas-wrap tall"><canvas id="chart-jp-distribution"></canvas></div>
+        <h3>Indian Migration — Arrivals, Departures & Net</h3>
+        <p class="chart-note" id="note-de-indian-flows"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-indian-flows"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Fastest Growing Employment Categories (CAGR)</h3>
-        <p class="chart-note" id="note-jp-cagr-rank"></p>
-        <div class="chart-canvas-wrap tall"><canvas id="chart-jp-cagr-rank"></canvas></div>
+        <h3>Total Foreign Migration — Arrivals, Departures & Net</h3>
+        <p class="chart-note" id="note-de-foreign-flows"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-foreign-flows"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>India's Share across Employment Categories</h3>
-        <p class="chart-note" id="note-jp-share-cats"></p>
-        <div class="chart-canvas-wrap tall"><canvas id="chart-jp-share-cats"></canvas></div>
+        <h3>Indian Monthly Migration Trend</h3>
+        <p class="chart-note" id="note-de-monthly-indian"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-monthly-indian"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Top 5 Employment Categories (As of Jun 2025) and Their Trend</h3>
-        <p class="chart-note" id="note-jp-emp-trend"></p>
-        <div class="chart-canvas-wrap tall"><canvas id="chart-jp-emp-trend"></canvas></div>
+        <h3>Monthly Net Migration — Indian vs Total Foreign</h3>
+        <p class="chart-note" id="note-de-monthly-compare"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-monthly-compare"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EMPLOYMENT TAB ================= -->
+  <div class="tab-panel" id="tab-employment">
+    <div class="section-head">
+      <span class="eyebrow">Labour Market</span>
+      <h2>Employment & Labour Market <span class="tag">Federal Employment Agency</span></h2>
+      <p class="section-intro">Indian workforce in Germany's labour market — employees, social security contributors, unemployment, and welfare metrics as of June 30 each year.</p>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Indian Employees in Germany — Trend</h3>
+        <p class="chart-note" id="note-de-indian-emp"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-indian-emp"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>All Foreign Employees — Trend</h3>
+        <p class="chart-note" id="note-de-foreign-emp"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-foreign-emp"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>India's Share of Foreign Workforce — Trend</h3>
+        <p class="chart-note" id="note-de-emp-share"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-emp-share"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Labour Market Breakdown</h3>
+        <p class="chart-note" id="note-de-indian-breakdown"></p>
+        <div class="chart-canvas-wrap tall"><canvas id="chart-de-indian-breakdown"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <h3>Employment Permits — First-Time Issuances (Flow)</h3>
+        <p class="chart-note" id="note-de-euro-permits-flow"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-euro-permits-flow"></canvas></div>
       </div>
     </div>
   </div>
@@ -358,40 +396,53 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <!-- ================= HEALTHCARE TAB ================= -->
   <div class="tab-panel" id="tab-healthcare">
     <div class="section-head">
-      <span class="eyebrow">Healthcare & Care Workers</span>
-      <h2>Medical & Caregiver Analysis <span class="tag">Healthcare focus</span></h2>
-      <p class="section-intro">India's presence in Japan's healthcare workforce — Medical (Healthcare Workers) and Caregiver (Nursing Care) residence categories.</p>
+      <span class="eyebrow">Healthcare Workforce</span>
+      <h2>Healthcare — Physicians & Nurses <span class="tag">OECD & BA data</span></h2>
+      <p class="section-intro">Indian-trained physicians and nurses in Germany's healthcare system — stock, inflow trends, and India's position among foreign nursing nationalities.</p>
     </div>
     <div class="health-kpi-strip">
-      <div class="health-kpi-card" id="health-kpi-medical">
-        <div class="health-kpi-title">Medical (Healthcare Worker) <span style="color:var(--gray); text-transform:none; font-weight:600; font-size:11px; float:right;">Jun 2025</span></div>
+      <div class="health-kpi-card" id="health-kpi-physicians">
+        <div class="health-kpi-title">Indian Physicians <span style="color:var(--gray); text-transform:none; font-weight:600; font-size:11px; float:right;" id="hk-phys-year">—</span></div>
         <div class="health-kpi-row">
-          <div class="health-kpi-metric"><div class="label">Indian</div><div class="value" id="hk-med-indian">—</div></div>
-          <div class="health-kpi-metric"><div class="label">Total Foreign</div><div class="value small" id="hk-med-foreign">—</div></div>
-          <div class="health-kpi-metric"><div class="label">India's Share</div><div class="value small" id="hk-med-share">—</div></div>
-          <div class="health-kpi-metric"><div class="label">CAGR (2021-2025)</div><div class="value small" id="hk-med-cagr">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Indian Stock</div><div class="value" id="hk-phys-stock">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Total Active</div><div class="value small" id="hk-phys-total">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Annual Inflow</div><div class="value small" id="hk-phys-inflow">—</div></div>
         </div>
       </div>
-      <div class="health-kpi-card" id="health-kpi-caregiver">
-        <div class="health-kpi-title">Caregiver (Nursing Care) <span style="color:var(--gray); text-transform:none; font-weight:600; font-size:11px; float:right;">Jun 2025</span></div>
+      <div class="health-kpi-card" id="health-kpi-nurses">
+        <div class="health-kpi-title">Indian Nurses <span style="color:var(--gray); text-transform:none; font-weight:600; font-size:11px; float:right;" id="hk-nurse-year">—</span></div>
         <div class="health-kpi-row">
-          <div class="health-kpi-metric"><div class="label">Indian</div><div class="value" id="hk-care-indian">—</div></div>
-          <div class="health-kpi-metric"><div class="label">Total Foreign</div><div class="value small" id="hk-care-foreign">—</div></div>
-          <div class="health-kpi-metric"><div class="label">India's Share</div><div class="value small" id="hk-care-share">—</div></div>
-          <div class="health-kpi-metric"><div class="label">CAGR (2021-2025)</div><div class="value small" id="hk-care-cagr">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Annual Inflow</div><div class="value" id="hk-nurse-inflow">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Total Active Nurses (DE)</div><div class="value small" id="hk-nurse-total">—</div></div>
+          <div class="health-kpi-metric"><div class="label">Hospital Nursing Rank</div><div class="value small" id="hk-nurse-rank">—</div></div>
         </div>
       </div>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Healthcare & Care — Indian Workers Trend</h3>
-        <p class="chart-note" id="note-jp-health-indian"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-jp-health-indian"></canvas></div>
+        <h3>Indian Physicians — Stock Trend</h3>
+        <p class="chart-note" id="note-de-phys-stock"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-phys-stock"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Healthcare & Care — Total Foreign Workers Trend</h3>
-        <p class="chart-note" id="note-jp-health-foreign"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-jp-health-foreign"></canvas></div>
+        <h3>Indian Nurse Inflow — Annual Trend</h3>
+        <p class="chart-note" id="note-de-nurse-inflow"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-nurse-inflow"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Physician Inflow — Annual Trend</h3>
+        <p class="chart-note" id="note-de-phys-inflow"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-phys-inflow"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Top 10 Nationalities in Hospital Nursing (2023)</h3>
+        <p class="chart-note" id="note-de-nursing-rank"></p>
+        <div class="chart-canvas-wrap tall"><canvas id="chart-de-nursing-rank"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <h3>Total Active Nurses & Physicians in Germany</h3>
+        <p class="chart-note" id="note-de-health-total"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-de-health-total"></canvas></div>
       </div>
     </div>
   </div>
@@ -401,61 +452,21 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
     <div class="section-head">
       <span class="eyebrow">Auto-generated Analysis</span>
       <h2>Key Insights <span class="tag">Data-driven highlights</span></h2>
-      <p class="section-intro">Automatically identified patterns and notable findings from the Japan residence status dataset.</p>
+      <p class="section-intro">Automatically identified patterns and notable findings from Germany's Indian population, migration, employment, and healthcare datasets.</p>
     </div>
     <div class="insight-grid" id="insight-grid">
-      <!-- Dynamically populated by japan-app.js -->
+      <!-- Dynamically populated by germany-app.js -->
     </div>
   </div>
 </main>
 
-<footer>GATI Foundation — Japan Country Dashboard · v1</footer>
+<footer>GATI Foundation — Germany Country Dashboard · v1</footer>
 
 <script>
 /* ================================================================
-   Japan CSV Data Loader
+   Germany JSON API Data Loader
    ================================================================ */
-const JP_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7T13wstWcJwnGebTYEJvdyEimXypaJqgYqEBBRU8x8H5oc0t8-8NRy41YEjGHAwzCUP4jNKvpB6KT/pub?output=csv';
-
-/* ---------- Minimal RFC 4180 CSV parser ---------- */
-function parseCSV(text) {
-  const rows = [];
-  let i = 0;
-  while (i < text.length) {
-    const row = [];
-    while (true) {
-      let val = '';
-      if (text[i] === '"') {
-        i++;
-        while (i < text.length) {
-          if (text[i] === '"') {
-            if (text[i + 1] === '"') { val += '"'; i += 2; }
-            else { i++; break; }
-          } else { val += text[i]; i++; }
-        }
-      } else {
-        while (i < text.length && text[i] !== ',' && text[i] !== '\r' && text[i] !== '\n') {
-          val += text[i]; i++;
-        }
-      }
-      row.push(val);
-      if (i < text.length && text[i] === ',') { i++; continue; }
-      break;
-    }
-    if (text[i] === '\r') i++;
-    if (text[i] === '\n') i++;
-    rows.push(row);
-  }
-  return rows;
-}
-
-function parseNumber(s) {
-  if (!s || s === 'N/A' || s.trim() === '') return null;
-  const cleaned = s.replace(/,/g, '').replace(/%/g, '').trim();
-  if (cleaned === '' || cleaned === 'N/A') return null;
-  const n = Number(cleaned);
-  return isNaN(n) ? null : n;
-}
+const DE_API_URL = 'https://script.google.com/macros/s/AKfycbyBrI9A912Wg8vp7DXhOcgIXj6NzbS7A-MAZGvgMKQ8up1pxzMTepSiwTHWMCHrBqGigw/exec';
 
 /* ---------- Show / hide loading overlay ---------- */
 function showLoading() {
@@ -466,7 +477,7 @@ function showLoading() {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(246,249,250,0.92);';
     overlay.innerHTML = '<div style="text-align:center;font-family:Poppins,sans-serif;">'
       + '<div style="width:48px;height:48px;border:4px solid #84D2E2;border-top-color:#006B76;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px;"></div>'
-      + '<div style="font-size:15px;font-weight:600;color:#006B76;">Loading Japan dashboard data…</div>'
+      + '<div style="font-size:15px;font-weight:600;color:#006B76;">Loading Germany dashboard data…</div>'
       + '<style>@keyframes spin{to{transform:rotate(360deg)}}</style>'
       + '</div>';
     document.body.appendChild(overlay);
@@ -493,19 +504,18 @@ function showError(msg) {
 }
 
 /* ---------- Main loader ---------- */
-async function loadJapanData() {
+async function loadGermanyData() {
   showLoading();
   try {
-    const resp = await fetch(JP_CSV_URL);
-    if (!resp.ok) throw new Error('Failed to load Japan CSV (' + resp.status + ')');
-    const csvText = await resp.text();
-    const grid = parseCSV(csvText);
-    processJapanCSV(grid);
+    const resp = await fetch(DE_API_URL);
+    if (!resp.ok) throw new Error('Failed to load Germany API (' + resp.status + ')');
+    const json = await resp.json();
+    processGermanyData(json);
     hideLoading();
-    initJapanDashboard();
+    initGermanyDashboard();
   } catch (err) {
-    console.error('Japan data load error:', err);
-    showError('Unable to load Japan data. Please check your connection and refresh. (' + err.message + ')');
+    console.error('Germany data load error:', err);
+    showError('Unable to load Germany data. Please check your connection and refresh. (' + err.message + ')');
   }
 }
 
@@ -516,12 +526,12 @@ document.addEventListener('click', e => {
   }
 });
 </script>
-<script src="japan-app.js"></script>
+<script src="germany-app.js"></script>
 <script>
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadJapanData);
+  document.addEventListener('DOMContentLoaded', loadGermanyData);
 } else {
-  loadJapanData();
+  loadGermanyData();
 }
 </script>
 </body>
