@@ -269,7 +269,7 @@ function renderOverviewCharts() {
     }
   });
   document.getElementById('note-jp-indian-trend').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[JUNE_YEARS.length - 1] + ' · ' + fmtNum(d.indian[0]) + ' → ' + fmtNum(d.indian[d.indian.length - 1]);
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[JUNE_YEARS.length - 1] + ' · ' + fmtNum(d.indian[0]) + ' → ' + fmtNum(d.indian[d.indian.length - 1]) + '. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 
   // 2. Total Foreign Population Trend
   renderOrUpdate('chart-jp-foreign-trend', {
@@ -295,7 +295,7 @@ function renderOverviewCharts() {
     }
   });
   document.getElementById('note-jp-foreign-trend').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[JUNE_YEARS.length - 1] + ' · ' + fmtNum(d.total[0]) + ' → ' + fmtNum(d.total[d.total.length - 1]);
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[JUNE_YEARS.length - 1] + ' · ' + fmtNum(d.total[0]) + ' → ' + fmtNum(d.total[d.total.length - 1]) + '. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 
   // 3. India's Share Trend
   const shareData = JUNE_YEARS.map((_, i) => d.total[i] > 0 ? (d.indian[i] / d.total[i] * 100) : 0);
@@ -313,7 +313,7 @@ function renderOverviewCharts() {
     options: lineOptions(v => v.toFixed(2) + '%')
   });
   document.getElementById('note-jp-share-trend').textContent =
-    fmtPct(shareData[0]) + ' → ' + fmtPct(shareData[shareData.length - 1]);
+    fmtPct(shareData[0]) + ' → ' + fmtPct(shareData[shareData.length - 1]) + '. Source: Calculated from Immigration Services Agency (ISA), Japan data.';
 
   // 4. Top Residence Categories by Indian Count
   const li = getLatestIdx();
@@ -345,7 +345,7 @@ function renderOverviewCharts() {
     }
   });
   document.getElementById('note-jp-top-categories').textContent =
-    'Jun ' + JUNE_YEARS[li] + ' · Top ' + cats.length + ' categories by Indian count';
+    'Jun ' + JUNE_YEARS[li] + ' · Top ' + cats.length + ' categories by Indian count. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 }
 
 /* ---- Workforce Charts ---- */
@@ -393,7 +393,7 @@ function renderWorkforceCharts() {
     }
   });
   document.getElementById('note-jp-distribution').textContent =
-    'Jun ' + JUNE_YEARS[li] + ' · Employment categories — Indian workers';
+    'Jun ' + JUNE_YEARS[li] + ' · Employment categories — Indian workers. Source: Calculated from Immigration Services Agency (ISA), Japan data.';
 
   // 2. Fastest Growing Employment Categories (CAGR)
   const cagrData = EMPLOYMENT_CATEGORIES
@@ -428,7 +428,7 @@ function renderWorkforceCharts() {
     }
   });
   document.getElementById('note-jp-cagr-rank').textContent =
-    'Jun ' + JUNE_YEARS[fi] + '–' + JUNE_YEARS[li] + ' · Indian workers, employment categories';
+    'Jun ' + JUNE_YEARS[fi] + '–' + JUNE_YEARS[li] + ' · Indian workers, employment categories. Source: Calculated from Immigration Services Agency (ISA), Japan data.';
 
   // 3. India's Share across Employment Categories
   const shareCats = EMPLOYMENT_CATEGORIES
@@ -461,7 +461,7 @@ function renderWorkforceCharts() {
     }
   });
   document.getElementById('note-jp-share-cats').textContent =
-    'Jun ' + JUNE_YEARS[li] + ' · Indian / Total Foreign per category';
+    'Jun ' + JUNE_YEARS[li] + ' · Indian / Total Foreign per category. Source: Calculated from Immigration Services Agency (ISA), Japan data.';
 
   // 4. Employment Category Trends (top 5 by latest count)
   const topEmpTrend = EMPLOYMENT_CATEGORIES
@@ -495,7 +495,7 @@ function renderWorkforceCharts() {
     }
   });
   document.getElementById('note-jp-emp-trend').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Based on top 5 count as of Jun ' + JUNE_YEARS[li];
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Based on top 5 count as of Jun ' + JUNE_YEARS[li] + '. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 }
 
 /* ---- Healthcare Charts ---- */
@@ -552,7 +552,7 @@ function renderHealthcareCharts() {
     }
   });
   document.getElementById('note-jp-health-indian').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Indian healthcare & care workers';
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Indian healthcare & care workers. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 
   // Healthcare Total Foreign Trend
   const fDatasets = [];
@@ -587,7 +587,7 @@ function renderHealthcareCharts() {
     }
   });
   document.getElementById('note-jp-health-foreign').textContent =
-    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Total foreign healthcare & care workers';
+    'Jun ' + JUNE_YEARS[0] + '–' + JUNE_YEARS[li] + ' · Total foreign healthcare & care workers. Source: Immigration Services Agency (ISA), Japan. Statistics on Foreign Residents in Japan.';
 }
 
 /* ---- Insights Generation ---- */
