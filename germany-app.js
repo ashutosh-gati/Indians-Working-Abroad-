@@ -336,21 +336,36 @@ function renderPopulationCharts() {
     });
   }
 
-  // 4. Eurostat Employment Permits Stock (Indian vs All Non-EU)
+  // 4. Eurostat Employment Permits Stock — Indian Citizens
   const euroIndianStock = findRow(DE.eurostat, { 'Description': 'Indian Citizens with Valid Employment' });
   const euroAllStock = findRow(DE.eurostat, { 'Description': 'All Non-EU Citizens with Valid Employment' });
-  if (euroIndianStock && euroAllStock) {
+  if (euroIndianStock) {
     const iData = extractYearData(euroIndianStock);
-    const aData = extractYearData(euroAllStock);
     const years = Object.keys(iData).map(Number).sort();
-    setNote('note-de-euro-permits-stock', 'Valid employment residence permits as of 31 Dec each year. Source: Eurostat (MIGR_RESVALID)');
-    renderOrUpdate('chart-de-euro-permits-stock', {
+    setNote('note-de-euro-permits-indian', 'Valid employment residence permits held by Indian citizens as of 31 Dec each year. Source: Eurostat (MIGR_RESVALID)');
+    renderOrUpdate('chart-de-euro-permits-indian', {
       type: 'bar',
       data: {
         labels: years.map(String),
         datasets: [
-          { label: 'Indian Citizens', data: years.map(y => iData[y] || 0), backgroundColor: PALETTE.teal, borderRadius: 4 },
-          { label: 'All Non-EU (÷10)', data: years.map(y => (aData[y] || 0) / 10), backgroundColor: PALETTE.gold + '80', borderRadius: 4 }
+          { label: 'Indian Citizens', data: years.map(y => iData[y] || 0), backgroundColor: PALETTE.teal, borderRadius: 4 }
+        ]
+      },
+      options: barOpts()
+    });
+  }
+
+  // 4b. Eurostat Employment Permits Stock — All Non-EU Citizens
+  if (euroAllStock) {
+    const aData = extractYearData(euroAllStock);
+    const years = Object.keys(aData).map(Number).sort();
+    setNote('note-de-euro-permits-noneu', 'Valid employment residence permits held by all non-EU citizens as of 31 Dec each year. Source: Eurostat (MIGR_RESVALID)');
+    renderOrUpdate('chart-de-euro-permits-noneu', {
+      type: 'bar',
+      data: {
+        labels: years.map(String),
+        datasets: [
+          { label: 'All Non-EU Citizens', data: years.map(y => aData[y] || 0), backgroundColor: PALETTE.gold, borderRadius: 4 }
         ]
       },
       options: barOpts()
