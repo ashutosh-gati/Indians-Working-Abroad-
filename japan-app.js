@@ -205,7 +205,7 @@ function renderExecKPIs() {
     const cagr = calcCAGR(d.indian[fi], d.indian[li], years);
     const cagrEl = document.getElementById('exec-all-cagr');
     if (cagr !== null) {
-      cagrEl.textContent = 'CAGR ' + fmtPctSigned(cagr);
+      cagrEl.textContent = "India's CAGR " + fmtPctSigned(cagr);
       cagrEl.className = 'exec-cagr' + (cagr < 0 ? ' negative' : '');
     }
   }
@@ -220,7 +220,7 @@ function renderExecKPIs() {
   const empCagr = calcCAGR(empIndian[fi], empIndian[li], years);
   const empCagrEl = document.getElementById('exec-emp-cagr');
   if (empCagr !== null) {
-    empCagrEl.textContent = 'CAGR ' + fmtPctSigned(empCagr);
+    empCagrEl.textContent = "India's CAGR " + fmtPctSigned(empCagr);
     empCagrEl.className = 'exec-cagr' + (empCagr < 0 ? ' negative' : '');
   }
 
@@ -231,12 +231,7 @@ function renderExecKPIs() {
   document.getElementById('exec-health-indian').textContent = fmtNum(hcIndian[li]);
   document.getElementById('exec-health-foreign').textContent = fmtNum(hcTotal[li]);
   document.getElementById('exec-health-share').textContent = hcTotal[li] > 0 ? fmtPct(hcIndian[li] / hcTotal[li] * 100) : '—';
-  const hcCagr = calcCAGR(hcIndian[fi], hcIndian[li], years);
-  const hcCagrEl = document.getElementById('exec-health-cagr');
-  if (hcCagr !== null) {
-    hcCagrEl.textContent = 'CAGR ' + fmtPctSigned(hcCagr);
-    hcCagrEl.className = 'exec-cagr' + (hcCagr < 0 ? ' negative' : '');
-  }
+
 }
 
 /* ---- Overview Charts ---- */
@@ -397,7 +392,7 @@ function renderWorkforceCharts() {
 
   // 2. Fastest Growing Employment Categories (CAGR)
   const cagrData = EMPLOYMENT_CATEGORIES
-    .filter(c => JP_DATA[c] && JP_DATA[c].indian[fi] > 0 && JP_DATA[c].indian[li] > 0)
+    .filter(c => JP_DATA[c] && JP_DATA[c].indian[fi] >= 10 && JP_DATA[c].indian[li] > 0)
     .map(c => {
       const cagr = calcCAGR(JP_DATA[c].indian[fi], JP_DATA[c].indian[li], years);
       return { name: c, cagr: cagr || 0 };
@@ -411,7 +406,7 @@ function renderWorkforceCharts() {
     data: {
       labels: cagrData.map(c => shortName(c.name)),
       datasets: [{
-        label: 'CAGR (%)',
+        label: "India's CAGR (%)",
         data: cagrData.map(c => c.cagr),
         backgroundColor: cagrData.map(c => c.cagr >= 0 ? '#2E8B94' : '#C0392B')
       }]
@@ -422,7 +417,7 @@ function renderWorkforceCharts() {
         ...hBarOptions().plugins,
         tooltip: {
           titleFont: baseFont(), bodyFont: baseFont(),
-          callbacks: { label: ctx => ' CAGR: ' + fmtPctSigned(ctx.parsed.x) }
+          callbacks: { label: ctx => " India's CAGR: " + fmtPctSigned(ctx.parsed.x) }
         }
       }
     }
@@ -513,8 +508,7 @@ function renderHealthcareCharts() {
     document.getElementById(prefix + '-indian').textContent = fmtNum(d.indian[li]);
     document.getElementById(prefix + '-foreign').textContent = fmtNum(d.total[li]);
     document.getElementById(prefix + '-share').textContent = d.total[li] > 0 ? fmtPct(d.indian[li] / d.total[li] * 100) : '—';
-    const cagr = calcCAGR(d.indian[fi], d.indian[li], years);
-    document.getElementById(prefix + '-cagr').textContent = cagr !== null ? fmtPctSigned(cagr) : '—';
+
   });
 
   // Healthcare Indian Trend
@@ -605,7 +599,7 @@ function renderInsights() {
     insights.push({
       cls: 'highlight',
       title: 'Indian Population Growth',
-      body: `India's population in Japan grew from <b>${fmtNum(d.indian[fi])}</b> (Jun ${JUNE_YEARS[fi]}) to <b>${fmtNum(d.indian[li])}</b> (Jun ${JUNE_YEARS[li]}), an absolute increase of <b>${fmtNum(growth)}</b> with a CAGR of <b>${cagr !== null ? fmtPct(cagr) : '—'}</b>.`
+      body: `India's population in Japan grew from <b>${fmtNum(d.indian[fi])}</b> (Jun ${JUNE_YEARS[fi]}) to <b>${fmtNum(d.indian[li])}</b> (Jun ${JUNE_YEARS[li]}), an absolute increase of <b>${fmtNum(growth)}</b> with an India CAGR of <b>${cagr !== null ? fmtPct(cagr) : '—'}</b>.`
     });
   }
 
@@ -624,7 +618,7 @@ function renderInsights() {
 
   // 3. Fastest Growing Category (employment)
   const cagrRanked = EMPLOYMENT_CATEGORIES
-    .filter(c => JP_DATA[c] && JP_DATA[c].indian[fi] > 0 && JP_DATA[c].indian[li] > 0)
+    .filter(c => JP_DATA[c] && JP_DATA[c].indian[fi] >= 10 && JP_DATA[c].indian[li] > 0)
     .map(c => ({ name: c, cagr: calcCAGR(JP_DATA[c].indian[fi], JP_DATA[c].indian[li], years) }))
     .filter(c => c.cagr !== null)
     .sort((a, b) => b.cagr - a.cagr);
@@ -634,7 +628,7 @@ function renderInsights() {
     insights.push({
       cls: 'highlight',
       title: 'Fastest Growing Employment Category',
-      body: `<b>${shortName(fastest.name)}</b> is the fastest growing employment category for Indians with a CAGR of <b>${fmtPct(fastest.cagr)}</b> (Jun ${JUNE_YEARS[fi]}–${JUNE_YEARS[li]}). Indian count grew from <b>${fmtNum(JP_DATA[fastest.name].indian[fi])}</b> to <b>${fmtNum(JP_DATA[fastest.name].indian[li])}</b>.`
+      body: `<b>${shortName(fastest.name)}</b> is the fastest growing employment category for Indians with an India CAGR of <b>${fmtPct(fastest.cagr)}</b> (Jun ${JUNE_YEARS[fi]}–${JUNE_YEARS[li]}). Indian count grew from <b>${fmtNum(JP_DATA[fastest.name].indian[fi])}</b> to <b>${fmtNum(JP_DATA[fastest.name].indian[li])}</b>.`
     });
   }
 
@@ -678,14 +672,10 @@ function renderInsights() {
   const hcIndian = sumCategories(HEALTHCARE_CATEGORIES, 'indian', li);
   const hcTotal = sumCategories(HEALTHCARE_CATEGORIES, 'total', li);
   if (hcIndian > 0) {
-    const hcCagr = calcCAGR(
-      sumCategories(HEALTHCARE_CATEGORIES, 'indian', fi),
-      hcIndian, years
-    );
     insights.push({
       cls: 'highlight',
       title: 'Healthcare Presence',
-      body: `<b>${fmtNum(hcIndian)}</b> Indians work in healthcare & care roles (Medical + Caregiver) out of <b>${fmtNum(hcTotal)}</b> total foreign healthcare workers. India's share is <b>${fmtPct(hcIndian / hcTotal * 100)}</b> with a CAGR of <b>${hcCagr !== null ? fmtPct(hcCagr) : '—'}</b>.`
+      body: `<b>${fmtNum(hcIndian)}</b> Indians work in healthcare & care roles (Medical + Caregiver) out of <b>${fmtNum(hcTotal)}</b> total foreign healthcare workers. India's share is <b>${fmtPct(hcIndian / hcTotal * 100)}</b>.`
     });
   }
 
