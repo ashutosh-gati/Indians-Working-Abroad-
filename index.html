@@ -440,8 +440,8 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <div class="tab-panel" id="tab-healthcare">
     <div class="section-head">
       <span class="eyebrow">Section 03</span>
-      <h2>Indian Nurses Abroad <span class="tag">Healthcare — nurses only</span></h2>
-      <p class="section-intro">Indian nurses working abroad, with total foreign nurse workforce as benchmark.</p>
+      <h2>Indian Nurses Abroad <span class="tag">Healthcare — nurses (stock &amp; flow)</span></h2>
+      <p class="section-intro">Indian nurses working abroad — stock (point-in-time totals), annual inflow, growth, and India's share of total foreign nurses, benchmarked across countries.</p>
     </div>
     <div class="kpi-strip">
       <div class="kpi-card" id="kpi-health-indian">
@@ -459,10 +459,15 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
         <div class="kpi-value">—</div>
         <div class="kpi-caption">Loading…</div>
       </div>
+      <div class="kpi-card" id="kpi-health-growth">
+        <div class="kpi-label">Indian Nurse Growth (Stock)</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-caption">Loading…</div>
+      </div>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Indian Nurses by Country</h3>
+        <h3>Indian Nurses by Country — Snapshot</h3>
         <div class="chart-filter-row" id="filters-health-snapshot"></div>
         <p class="chart-note" id="note-health-snapshot"></p>
         <div class="chart-canvas-wrap"><canvas id="chart-health-snapshot"></canvas></div>
@@ -473,9 +478,30 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
         <p class="chart-note" id="note-health-share"></p>
         <div class="chart-canvas-wrap"><canvas id="chart-health-share"></canvas></div>
       </div>
-    </div>
-    <div class="no-flow-note">
-      <b>No Flow chart for nurses:</b> annual new-arrival (Flow) data for nurses is too sparse for reliable charting, so this section shows Stock (point-in-time totals) only.
+      <div class="chart-card">
+        <h3>Indian Nurses — Stock Trend by Country</h3>
+        <div class="chart-filter-row" id="filters-health-stock-trend"></div>
+        <p class="chart-note" id="note-health-stock-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-stock-trend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>India's Share of Foreign Nurses — Trend</h3>
+        <div class="chart-filter-row" id="filters-health-share-trend"></div>
+        <p class="chart-note" id="note-health-share-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-share-trend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Indian Nurse Inflow — Annual New Arrivals (Flow)</h3>
+        <div class="chart-filter-row" id="filters-health-flow-trend"></div>
+        <p class="chart-note" id="note-health-flow-trend"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-flow-trend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Top Destinations for Indian Nurses</h3>
+        <div class="chart-filter-row" id="filters-health-top-dest"></div>
+        <p class="chart-note" id="note-health-top-dest"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-health-top-dest"></canvas></div>
+      </div>
     </div>
   </div>
 
@@ -787,8 +813,9 @@ function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
   DATA.Employment_Stock = filterRows(employmentRows, 'Stock');
   DATA.Employment_Flow  = filterRows(employmentRows, 'Flow');
 
-  /* Healthcare — only Stock rows are used by the dashboard */
+  /* Healthcare — Stock and Flow rows */
   DATA.Healthcare_Nurses_Stock = filterRows(healthcareRows, 'Stock');
+  DATA.Healthcare_Nurses_Flow  = filterRows(healthcareRows, 'Flow');
 
   /* Employment_Stock_2024_Snapshot: widest-coverage snapshot = all Employment Stock rows for 2024 */
   DATA.Employment_Stock_2024_Snapshot = DATA.Employment_Stock

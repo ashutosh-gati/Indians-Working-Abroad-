@@ -21,7 +21,11 @@ const CHARTS = {
   'emp-stock-trend': { table: 'Employment_Stock', type: 'trend', nationality: 'Indian' },
   'emp-flow-trend': { table: 'Employment_Flow', type: 'trend', nationality: 'Indian' },
   'health-snapshot': { table: 'Healthcare_Nurses_Stock', type: 'snapshot', nationality: 'Indian' },
-  'health-share': { table: 'Healthcare_Nurses_Stock', type: 'share' }
+  'health-share': { table: 'Healthcare_Nurses_Stock', type: 'share' },
+  'health-stock-trend': { table: 'Healthcare_Nurses_Stock', type: 'trend', nationality: 'Indian' },
+  'health-share-trend': { table: 'Healthcare_Nurses_Stock', type: 'trend-share' },
+  'health-flow-trend': { table: 'Healthcare_Nurses_Flow', type: 'trend', nationality: 'Indian' },
+  'health-top-dest': { table: 'Healthcare_Nurses_Stock', type: 'snapshot', nationality: 'Indian' }
 };
 
 /* ---- Per-chart filter states ---- */
@@ -343,11 +347,71 @@ function renderSnapshotChart(chartId) {
   noteEl.textContent = year + ' · ' + rows.map(r => r.country).join(', ');
 }
 
+/* ---- Trend-share chart: India's share (%) per country over time ---- */
+function renderTrendShareChart(chartId) {
+  const cfg = CHARTS[chartId];
+  const years = chartYears(chartId);
+  const active = chartCountries(chartId);
+  const noteEl = document.getElementById('note-' + chartId);
+  const canvasId = 'chart-' + chartId;
+
+  if (years.length === 0 || active.length === 0) {
+    noteEl.textContent = 'No data available for the current filters.';
+    renderOrUpdate(canvasId, emptyChartConfig()); return;
+  }
+
+  /* For each country, compute Indian / Total Foreigners share per year */
+  const countriesWithData = active.filter(c =>
+    years.some(y => {
+      const ind = DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === 'Indian');
+      const tot = DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === 'Total Foreigners');
+      return ind && tot && tot.Value > 0;
+    })
+  );
+
+  if (countriesWithData.length === 0) {
+    noteEl.textContent = 'No overlapping Indian / Total-Foreigner data for the current filters.';
+    renderOrUpdate(canvasId, emptyChartConfig()); return;
+  }
+
+  const datasets = countriesWithData.map(c => {
+    const data = years.map(y => {
+      const ind = DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === 'Indian');
+      const tot = DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === 'Total Foreigners');
+      if (ind && tot && tot.Value > 0) return (ind.Value / tot.Value) * 100;
+      return null;
+    });
+    return {
+      label: c, data, borderColor: COUNTRY_COLORS[c], backgroundColor: COUNTRY_COLORS[c],
+      tension: 0.3, spanGaps: true, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 5
+    };
+  });
+
+  renderOrUpdate(canvasId, {
+    type: 'line',
+    data: { labels: years, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12 } },
+        tooltip: { titleFont: baseFont(), bodyFont: baseFont(), callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + (ctx.parsed.y !== null ? ctx.parsed.y.toFixed(1) + '%' : '—') } }
+      },
+      scales: {
+        x: { grid: { color: '#EEF2F3' }, ticks: { font: baseFont() } },
+        y: { grid: { color: '#EEF2F3' }, ticks: { font: baseFont(), callback: v => v.toFixed(1) + '%' }, beginAtZero: true }
+      }
+    }
+  });
+  noteEl.textContent = years[0] + '–' + years[years.length - 1] + ' · India's share = Indian nurses ÷ total foreign nurses × 100, per country. ' + countriesWithData.join(', ');
+}
+
 function renderChart(chartId) {
   const type = CHARTS[chartId].type;
   if (type === 'trend') renderTrendChart(chartId);
   else if (type === 'share') renderShareChart(chartId);
   else if (type === 'snapshot') renderSnapshotChart(chartId);
+  else if (type === 'trend-share') renderTrendShareChart(chartId);
 }
 
 /* ---- Build per-chart filter UI ---- */
@@ -442,7 +506,7 @@ function buildChartFilters() {
 const TABS_CHARTS = {
   population: ['pop-stock-trend', 'pop-share', 'pop-flow-trend'],
   employment: ['emp-snapshot', 'emp-share', 'emp-stock-trend', 'emp-flow-trend'],
-  healthcare: ['health-snapshot', 'health-share']
+  healthcare: ['health-snapshot', 'health-share', 'health-stock-trend', 'health-share-trend', 'health-flow-trend', 'health-top-dest']
 };
 
 function initTabs() {
@@ -478,6 +542,37 @@ function renderKPIs() {
   renderFixedYearKPI('kpi-health-indian', 'Healthcare_Nurses_Stock', 'Indian', 2024);
   renderFixedYearKPI('kpi-health-foreign', 'Healthcare_Nurses_Stock', 'Total Foreigners', 2024);
   renderFixedYearShareKPI('kpi-health-share', 'Healthcare_Nurses_Stock', 2024);
+
+  /* Healthcare — growth KPI (avg % change across countries with 2020 & latest data) */
+  renderHealthGrowthKPI('kpi-health-growth', 'Healthcare_Nurses_Stock');
+}
+
+/* ---- Healthcare growth KPI: average % change for Indian nurses across countries ---- */
+function renderHealthGrowthKPI(elId, table) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const valEl = el.querySelector('.kpi-value');
+  const capEl = el.querySelector('.kpi-caption');
+  const allC = getTableCountries(table);
+  const years = getTableYears(table);
+  if (years.length < 2) { valEl.textContent = '—'; capEl.textContent = 'Not enough years'; return; }
+  const firstYear = Math.min(...years);
+  const lastYear = Math.max(...years);
+
+  const growths = [];
+  const countriesUsed = [];
+  allC.forEach(c => {
+    const first = DATA[table].find(r => r.Year === firstYear && r.Country === c && r.Nationality === 'Indian');
+    const last = DATA[table].find(r => r.Year === lastYear && r.Country === c && r.Nationality === 'Indian');
+    if (first && last && first.Value > 0) {
+      growths.push(((last.Value - first.Value) / first.Value) * 100);
+      countriesUsed.push(c);
+    }
+  });
+  if (growths.length === 0) { valEl.textContent = '—'; capEl.textContent = 'No matching data'; return; }
+  const avg = growths.reduce((s, v) => s + v, 0) / growths.length;
+  valEl.textContent = (avg >= 0 ? '+' : '') + avg.toFixed(0) + '%';
+  capEl.textContent = firstYear + '→' + lastYear + ' · avg across ' + countriesUsed.join(', ');
 }
 /* ---- Master init (called after DATA is populated) ---- */
 function initDashboard(){
