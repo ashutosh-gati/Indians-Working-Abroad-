@@ -737,35 +737,43 @@ function renderHealthcareCharts() {
     });
   }
 
-  // 5. Total Active Nurses & Physicians
-  if (nurseTotalRow && physTotalRow) {
-    const nData = extractYearData(nurseTotalRow);
-    const pData = extractYearData(physTotalRow);
-    // Use overlapping years
-    const allYears = [...new Set([...Object.keys(nData), ...Object.keys(pData)].map(Number))].sort();
-    setNote('note-de-health-total', 'Total nursing and physician workforce in Germany (all nationalities). Source: OECD Data Explorer');
-    renderOrUpdate('chart-de-health-total', {
+  // 5. Total Active Nurses
+  if (nurseTotalRow) {
+    const data = extractYearData(nurseTotalRow);
+    const years = Object.keys(data).map(Number).sort();
+    setNote('note-de-nurses-total', 'Total nursing workforce in Germany (all nationalities). Source: OECD Data Explorer');
+    renderOrUpdate('chart-de-nurses-total', {
       type: 'line',
       data: {
-        labels: allYears.map(String),
-        datasets: [
-          { label: 'Total Active Nurses', data: allYears.map(y => nData[y] || null), borderColor: PALETTE.teal, borderWidth: 2.5, tension: 0.3, pointRadius: 3, spanGaps: true, yAxisID: 'y' },
-          { label: 'Total Active Physicians', data: allYears.map(y => pData[y] || null), borderColor: PALETTE.gold, borderWidth: 2.5, tension: 0.3, pointRadius: 3, spanGaps: true, yAxisID: 'y1' }
-        ]
+        labels: years.map(String),
+        datasets: [{
+          label: 'Total Active Nurses',
+          data: years.map(y => data[y]),
+          borderColor: PALETTE.teal, backgroundColor: PALETTE.teal + '20',
+          fill: true, tension: 0.3, pointRadius: 4, borderWidth: 2.5
+        }]
       },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { position: 'bottom', labels: { font: baseFont(), usePointStyle: true, boxWidth: 8, padding: 12 } },
-          tooltip: { titleFont: baseFont(), bodyFont: baseFont() }
-        },
-        scales: {
-          x: { grid: { color: '#EEF2F3' }, ticks: { font: baseFont() } },
-          y: { type: 'linear', position: 'left', grid: { color: '#EEF2F3' }, ticks: { font: baseFont(), callback: v => fmtNum(v) }, title: { display: true, text: 'Nurses', font: baseFont(), color: PALETTE.teal } },
-          y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { font: baseFont(), callback: v => fmtNum(v) }, title: { display: true, text: 'Physicians', font: baseFont(), color: PALETTE.gold } }
-        }
-      }
+      options: lineOpts()
+    });
+  }
+
+  // 6. Total Active Physicians
+  if (physTotalRow) {
+    const data = extractYearData(physTotalRow);
+    const years = Object.keys(data).map(Number).sort();
+    setNote('note-de-phys-total', 'Total physician workforce in Germany (all nationalities). Source: OECD Data Explorer');
+    renderOrUpdate('chart-de-phys-total', {
+      type: 'line',
+      data: {
+        labels: years.map(String),
+        datasets: [{
+          label: 'Total Active Physicians',
+          data: years.map(y => data[y]),
+          borderColor: PALETTE.gold, backgroundColor: PALETTE.gold + '20',
+          fill: true, tension: 0.3, pointRadius: 4, borderWidth: 2.5
+        }]
+      },
+      options: lineOpts()
     });
   }
 }
