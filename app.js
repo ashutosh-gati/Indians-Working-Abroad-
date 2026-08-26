@@ -403,7 +403,7 @@ function renderTrendShareChart(chartId) {
       }
     }
   });
-  noteEl.textContent = years[0] + '–' + years[years.length - 1] + ' · India\\'s share = Indian nurses ÷ total foreign nurses × 100, per country. ' + countriesWithData.join(', ');
+  noteEl.textContent = years[0] + '–' + years[years.length - 1] + " · India's share = Indian nurses ÷ total foreign nurses × 100, per country. " + countriesWithData.join(', ');
 }
 
 function renderChart(chartId) {
