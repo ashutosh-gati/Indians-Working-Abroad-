@@ -497,7 +497,7 @@ function buildChartFilters() {
 
     /* Year controls */
     if (allYears.length > 1) {
-      if (cfg.type === 'trend') {
+      if (cfg.type.includes('trend')) {
         /* Year range: from – to */
         const lbl = document.createElement('span');
         lbl.className = 'filter-year-label';
