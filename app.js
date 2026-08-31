@@ -16,6 +16,7 @@ const CHARTS = {
   'pop-stock-trend': { table: 'AllRegions_Stock', type: 'trend', nationality: 'Indian' },
   'pop-share': { table: 'AllRegions_Stock', type: 'share' },
   'pop-flow-trend': { table: 'AllRegions_Flow', type: 'trend', nationality: 'Indian' },
+  'pop-foreign-flow-trend': { table: 'AllRegions_Flow', type: 'trend-foreign', nationality: 'Total Foreigners' },
   'emp-snapshot': { table: 'Employment_Stock_2024_Snapshot', type: 'snapshot', nationality: 'Indian' },
   'emp-share': { table: 'Employment_Stock_2024_Snapshot', type: 'share' },
   'emp-stock-trend': { table: 'Employment_Stock', type: 'trend', nationality: 'Indian' },
@@ -406,12 +407,65 @@ function renderTrendShareChart(chartId) {
   noteEl.textContent = years[0] + '–' + years[years.length - 1] + " · India's share = Indian nurses ÷ total foreign nurses × 100, per country. " + countriesWithData.join(', ');
 }
 
+/* ---- Trend chart for Total Foreigners — with excluded-countries note ---- */
+function renderTrendForeignChart(chartId) {
+  const cfg = CHARTS[chartId];
+  const years = chartYears(chartId);
+  const active = chartCountries(chartId);
+  const noteEl = document.getElementById('note-' + chartId);
+  const excludedEl = document.getElementById('note-' + chartId + '-excluded');
+  const canvasId = 'chart-' + chartId;
+
+  /* Determine which active countries actually have Total Foreigners flow data */
+  const countriesWithData = active.filter(c =>
+    years.some(y => DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === cfg.nationality))
+  );
+
+  /* All 10 dashboard countries — determine which are excluded */
+  const allDashboardCountries = ['Canada','France','Germany','Italy','Japan','Poland','South Korea','Spain','UK','USA'];
+  const allTableCountries = getTableCountries(cfg.table);
+  const countriesWithAnyData = allTableCountries.filter(c =>
+    DATA[cfg.table].some(r => r.Country === c && r.Nationality === cfg.nationality)
+  );
+  const excludedCountries = allDashboardCountries.filter(c => !countriesWithAnyData.includes(c));
+
+  if (years.length === 0 || countriesWithData.length === 0) {
+    noteEl.textContent = 'No data available for the current filters.';
+    if (excludedEl) excludedEl.textContent = '';
+    renderOrUpdate(canvasId, emptyChartConfig()); return;
+  }
+
+  const datasets = countriesWithData.map(c => {
+    const data = years.map(y => {
+      const rec = DATA[cfg.table].find(r => r.Year === y && r.Country === c && r.Nationality === cfg.nationality);
+      return rec ? rec.Value : null;
+    });
+    return {
+      label: c, data, borderColor: COUNTRY_COLORS[c], backgroundColor: COUNTRY_COLORS[c],
+      tension: 0.3, spanGaps: true, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 5
+    };
+  });
+
+  renderOrUpdate(canvasId, { type: 'line', data: { labels: years, datasets }, options: lineOptions() });
+  noteEl.textContent = years[0] + '–' + years[years.length - 1] + ' · ' + countriesWithData.join(', ');
+
+  /* Show excluded countries note */
+  if (excludedEl) {
+    if (excludedCountries.length > 0) {
+      excludedEl.textContent = 'Note: ' + excludedCountries.join(', ') + (excludedCountries.length === 1 ? ' is' : ' are') + ' not included — total foreign arrivals (flow) data not available for ' + (excludedCountries.length === 1 ? 'this country' : 'these countries') + '.';
+    } else {
+      excludedEl.textContent = '';
+    }
+  }
+}
+
 function renderChart(chartId) {
   const type = CHARTS[chartId].type;
   if (type === 'trend') renderTrendChart(chartId);
   else if (type === 'share') renderShareChart(chartId);
   else if (type === 'snapshot') renderSnapshotChart(chartId);
   else if (type === 'trend-share') renderTrendShareChart(chartId);
+  else if (type === 'trend-foreign') renderTrendForeignChart(chartId);
 }
 
 /* ---- Build per-chart filter UI ---- */
@@ -504,7 +558,7 @@ function buildChartFilters() {
 
 /* ---- Tab navigation ---- */
 const TABS_CHARTS = {
-  population: ['pop-stock-trend', 'pop-share', 'pop-flow-trend'],
+  population: ['pop-stock-trend', 'pop-share', 'pop-flow-trend', 'pop-foreign-flow-trend'],
   employment: ['emp-snapshot', 'emp-share', 'emp-stock-trend', 'emp-flow-trend'],
   healthcare: ['health-snapshot', 'health-share', 'health-stock-trend', 'health-share-trend', 'health-flow-trend', 'health-top-dest']
 };
