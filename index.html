@@ -376,19 +376,32 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
         <p class="chart-note" id="note-pop-share"></p>
         <div class="chart-canvas-wrap"><canvas id="chart-pop-share"></canvas></div>
       </div>
-      <div class="chart-card wide">
-        <h3>New Indian Arrivals — Trend by Country (Flow)</h3>
-        <div class="chart-filter-row" id="filters-pop-flow-trend"></div>
-        <p class="chart-note" id="note-pop-flow-trend"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-trend"></canvas></div>
+      <div class="chart-card">
+        <h3>Indian Arrivals by Destination Country — All-Nationality Basis</h3>
+        <div class="chart-filter-row" id="filters-pop-flow-A-indian"></div>
+        <p class="chart-note" id="note-pop-flow-A-indian"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-A-indian"></canvas></div>
       </div>
-      <div class="chart-card wide">
-        <h3>Total Foreign Arrivals — Trend by Country (Flow)</h3>
-        <div class="chart-filter-row" id="filters-pop-foreign-flow-trend"></div>
-        <p class="chart-note" id="note-pop-foreign-flow-trend"></p>
-        <div class="chart-canvas-wrap"><canvas id="chart-pop-foreign-flow-trend"></canvas></div>
-        <p class="chart-note" id="note-pop-foreign-flow-excluded" style="color:#8C6A1F;font-style:italic;margin-top:8px;"></p>
+      <div class="chart-card">
+        <h3>Total Foreign Arrivals by Destination Country — All-Nationality Basis</h3>
+        <div class="chart-filter-row" id="filters-pop-flow-A-foreign"></div>
+        <p class="chart-note" id="note-pop-flow-A-foreign"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-A-foreign"></canvas></div>
       </div>
+      <p class="chart-note" style="color:#8C6A1F;font-style:italic;margin-top:2px;margin-bottom:12px;grid-column:1/-1;">Source: national statistical/immigration authorities (Destatis, ONS LTIM, Korea Immigration Service). Each covers all foreign nationalities, but methods differ by country — not directly comparable to each other or to the non-EU chart.</p>
+      <div class="chart-card">
+        <h3>Indian Arrivals by Destination Country — Non-EU Basis</h3>
+        <div class="chart-filter-row" id="filters-pop-flow-B-indian"></div>
+        <p class="chart-note" id="note-pop-flow-B-indian"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-B-indian"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Non-EU Arrivals by Destination Country</h3>
+        <div class="chart-filter-row" id="filters-pop-flow-B-foreign"></div>
+        <p class="chart-note" id="note-pop-flow-B-foreign"></p>
+        <div class="chart-canvas-wrap"><canvas id="chart-pop-flow-B-foreign"></canvas></div>
+      </div>
+      <p class="chart-note" style="color:#8C6A1F;font-style:italic;margin-top:2px;margin-bottom:4px;grid-column:1/-1;">Source: Eurostat first-permit data (France, Poland, Spain) and ISTAT (Italy). All four use a non-EU comparator, excluding EU/EEA citizens — not the full foreign-resident population.</p>
     </div>
   </div>
 
@@ -839,6 +852,12 @@ function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
   DATA.AllReasons_Stock = DATA.AllReasons_Stock.filter(
     r => r.Country !== 'France' && r.Country !== 'Poland'
   );
+
+  /* Flow — split by methodology group (Canada excluded from both) */
+  const FLOW_GROUP_A = ['Germany', 'UK', 'South Korea'];
+  const FLOW_GROUP_B = ['France', 'Poland', 'Spain', 'Italy'];
+  DATA.AllReasons_Flow_A = DATA.AllReasons_Flow.filter(r => FLOW_GROUP_A.includes(r.Country));
+  DATA.AllReasons_Flow_B = DATA.AllReasons_Flow.filter(r => FLOW_GROUP_B.includes(r.Country));
 }
 
 /* ---------- Show / hide loading overlay ---------- */
