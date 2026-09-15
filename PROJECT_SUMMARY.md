@@ -106,7 +106,7 @@ The main dashboard pulls live data from **3 published Google Sheets** (one per t
 1. Each Google Sheet is published as CSV via a public URL
 2. On page load, `index.html` fetches all 3 CSVs in parallel
 3. A custom RFC 4180 CSV parser converts the wide-format spreadsheet into row objects
-4. Rows are split into 6 data tables: `AllRegions_Stock`, `AllRegions_Flow`, `Employment_Stock`, `Employment_Flow`, `Healthcare_Nurses_Stock`, `Healthcare_Nurses_Flow`
+4. Rows are split into 6 data tables: `AllReasons_Stock`, `AllReasons_Flow`, `Employment_Stock`, `Employment_Flow`, `Healthcare_Nurses_Stock`, `Healthcare_Nurses_Flow`
 5. `app.js` reads these tables and renders all KPIs + charts
 
 ### 4.2 Germany Page — Google Sheets JSON API

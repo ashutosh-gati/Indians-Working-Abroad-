@@ -368,6 +368,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
         <div class="chart-filter-row" id="filters-pop-stock-trend"></div>
         <p class="chart-note" id="note-pop-stock-trend"></p>
         <div class="chart-canvas-wrap"><canvas id="chart-pop-stock-trend"></canvas></div>
+        <p class="chart-note" style="color:#8C6A1F;font-style:italic;margin-top:4px;">Note: stock reference dates differ by country.</p>
       </div>
       <div class="chart-card">
         <h3>Indian Share of Total Foreign Population, by Country</h3>
@@ -814,8 +815,8 @@ function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
       ({ Year, Country, Nationality, Value }));
   }
 
-  DATA.AllRegions_Stock = filterRows(allReasonRows, 'Stock');
-  DATA.AllRegions_Flow  = filterRows(allReasonRows, 'Flow');
+  DATA.AllReasons_Stock = filterRows(allReasonRows, 'Stock');
+  DATA.AllReasons_Flow  = filterRows(allReasonRows, 'Flow');
 
   DATA.Employment_Stock = filterRows(employmentRows, 'Stock');
   DATA.Employment_Flow  = filterRows(employmentRows, 'Flow');
@@ -833,6 +834,11 @@ function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
   Object.keys(DATA).forEach(k => {
     DATA[k] = DATA[k].filter(r => r.Country !== 'USA');
   });
+
+  /* Remove France & Poland from population stock — Eurostat permit data, not population register */
+  DATA.AllReasons_Stock = DATA.AllReasons_Stock.filter(
+    r => r.Country !== 'France' && r.Country !== 'Poland'
+  );
 }
 
 /* ---------- Show / hide loading overlay ---------- */

@@ -13,10 +13,10 @@ const NATION_COLORS = { "Indian": "#E5A812", "Total Foreigners": "#006B76" };
 
 /* ---- Chart registry ---- */
 const CHARTS = {
-  'pop-stock-trend': { table: 'AllRegions_Stock', type: 'trend', nationality: 'Indian' },
-  'pop-share': { table: 'AllRegions_Stock', type: 'share' },
-  'pop-flow-trend': { table: 'AllRegions_Flow', type: 'trend', nationality: 'Indian' },
-  'pop-foreign-flow-trend': { table: 'AllRegions_Flow', type: 'trend-foreign', nationality: 'Total Foreigners' },
+  'pop-stock-trend': { table: 'AllReasons_Stock', type: 'trend', nationality: 'Indian' },
+  'pop-share': { table: 'AllReasons_Stock', type: 'share' },
+  'pop-flow-trend': { table: 'AllReasons_Flow', type: 'trend', nationality: 'Indian' },
+  'pop-foreign-flow-trend': { table: 'AllReasons_Flow', type: 'trend-foreign', nationality: 'Total Foreigners' },
   'emp-snapshot': { table: 'Employment_Stock_2024_Snapshot', type: 'snapshot', nationality: 'Indian' },
   'emp-share': { table: 'Employment_Stock_2024_Snapshot', type: 'share' },
   'emp-stock-trend': { table: 'Employment_Stock', type: 'trend', nationality: 'Indian' },
@@ -582,10 +582,10 @@ function initTabs() {
 
 /* ---- Render all KPIs ---- */
 function renderKPIs() {
-  /* Population — use AllRegions_Stock year 2024 (8 countries) */
-  renderFixedYearKPI('kpi-pop-indian', 'AllRegions_Stock', 'Indian', 2024);
-  renderFixedYearKPI('kpi-pop-foreign', 'AllRegions_Stock', 'Total Foreigners', 2024);
-  renderFixedYearShareKPI('kpi-pop-share', 'AllRegions_Stock', 2024);
+  /* Population — use AllReasons_Stock year 2024 (5 countries) */
+  renderFixedYearKPI('kpi-pop-indian', 'AllReasons_Stock', 'Indian', 2024);
+  renderFixedYearKPI('kpi-pop-foreign', 'AllReasons_Stock', 'Total Foreigners', 2024);
+  renderFixedYearShareKPI('kpi-pop-share', 'AllReasons_Stock', 2024);
 
   /* Employment — use Employment_Stock year 2024 (9 countries) */
   renderFixedYearKPI('kpi-emp-indian', 'Employment_Stock', 'Indian', 2024);
