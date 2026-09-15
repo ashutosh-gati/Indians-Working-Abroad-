@@ -342,7 +342,7 @@ footer{background:var(--teal-dark);color:#9FC6CA;text-align:center;font-size:11.
   <div class="tab-panel active" id="tab-population">
     <div class="section-head">
       <span class="eyebrow">Section 01</span>
-      <h2>Indian Population Abroad <span class="tag">All purposes</span></h2>
+      <h2>Indians Abroad <span class="tag">All purposes</span></h2>
       <p class="section-intro">Indians resident in a country for any purpose — work, study, family or otherwise — alongside each country's total foreign-national numbers.</p>
     </div>
     <div class="kpi-strip">
@@ -828,6 +828,11 @@ function buildDataTables(allReasonRows, employmentRows, healthcareRows) {
   DATA.Employment_Stock_2024_Snapshot = DATA.Employment_Stock
     .filter(r => r.Year === 2024)
     .map(r => ({ ...r }));
+
+  /* Remove USA from all tables — excluded from every chart, KPI and filter */
+  Object.keys(DATA).forEach(k => {
+    DATA[k] = DATA[k].filter(r => r.Country !== 'USA');
+  });
 }
 
 /* ---------- Show / hide loading overlay ---------- */
