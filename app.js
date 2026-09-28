@@ -23,9 +23,8 @@ const CHARTS = {
   'emp-share': { table: 'Employment_Stock', type: 'share' },
   'emp-flow-indian': { table: 'Employment_Flow', type: 'trend', nationality: 'Indian' },
   'emp-flow-foreign': { table: 'Employment_Flow', type: 'trend', nationality: 'Total Foreigners' },
-  'health-snapshot': { table: 'Healthcare_Nurses_Stock', type: 'snapshot', nationality: 'Indian' },
-  'health-share': { table: 'Healthcare_Nurses_Stock', type: 'share' },
   'health-stock-trend': { table: 'Healthcare_Nurses_Stock', type: 'trend', nationality: 'Indian' },
+  'health-stock-foreign': { table: 'Healthcare_Nurses_Stock', type: 'trend', nationality: 'Total Foreigners' },
   'health-share-trend': { table: 'Healthcare_Nurses_Stock', type: 'trend-share' },
   'health-flow-trend': { table: 'Healthcare_Nurses_Flow', type: 'trend', nationality: 'Indian' },
   'health-top-dest': { table: 'Healthcare_Nurses_Stock', type: 'snapshot', nationality: 'Indian' }
@@ -509,7 +508,7 @@ function buildChartFilters() {
 const TABS_CHARTS = {
   population: ['pop-stock-trend', 'pop-share', 'pop-flow-A-indian', 'pop-flow-A-foreign', 'pop-flow-B-indian', 'pop-flow-B-foreign'],
   employment: ['emp-stock-trend', 'emp-share', 'emp-flow-indian', 'emp-flow-foreign'],
-  healthcare: ['health-snapshot', 'health-share', 'health-stock-trend', 'health-share-trend', 'health-flow-trend', 'health-top-dest']
+  healthcare: ['health-stock-trend', 'health-stock-foreign', 'health-share-trend', 'health-flow-trend', 'health-top-dest']
 };
 
 function initTabs() {
