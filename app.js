@@ -19,10 +19,10 @@ const CHARTS = {
   'pop-flow-A-foreign':     { table: 'AllReasons_Flow_A', type: 'trend', nationality: 'Total Foreigners' },
   'pop-flow-B-indian':      { table: 'AllReasons_Flow_B', type: 'trend', nationality: 'Indian' },
   'pop-flow-B-foreign':     { table: 'AllReasons_Flow_B', type: 'trend', nationality: 'Total Foreigners' },
-  'emp-snapshot': { table: 'Employment_Stock_2024_Snapshot', type: 'snapshot', nationality: 'Indian' },
-  'emp-share': { table: 'Employment_Stock_2024_Snapshot', type: 'share' },
   'emp-stock-trend': { table: 'Employment_Stock', type: 'trend', nationality: 'Indian' },
-  'emp-flow-trend': { table: 'Employment_Flow', type: 'trend', nationality: 'Indian' },
+  'emp-share': { table: 'Employment_Stock', type: 'share' },
+  'emp-flow-indian': { table: 'Employment_Flow', type: 'trend', nationality: 'Indian' },
+  'emp-flow-foreign': { table: 'Employment_Flow', type: 'trend', nationality: 'Total Foreigners' },
   'health-snapshot': { table: 'Healthcare_Nurses_Stock', type: 'snapshot', nationality: 'Indian' },
   'health-share': { table: 'Healthcare_Nurses_Stock', type: 'share' },
   'health-stock-trend': { table: 'Healthcare_Nurses_Stock', type: 'trend', nationality: 'Indian' },
@@ -508,7 +508,7 @@ function buildChartFilters() {
 /* ---- Tab navigation ---- */
 const TABS_CHARTS = {
   population: ['pop-stock-trend', 'pop-share', 'pop-flow-A-indian', 'pop-flow-A-foreign', 'pop-flow-B-indian', 'pop-flow-B-foreign'],
-  employment: ['emp-snapshot', 'emp-share', 'emp-stock-trend', 'emp-flow-trend'],
+  employment: ['emp-stock-trend', 'emp-share', 'emp-flow-indian', 'emp-flow-foreign'],
   healthcare: ['health-snapshot', 'health-share', 'health-stock-trend', 'health-share-trend', 'health-flow-trend', 'health-top-dest']
 };
 
