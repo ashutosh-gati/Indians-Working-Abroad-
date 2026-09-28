@@ -38,11 +38,8 @@ No `package.json`, no build tools, no npm, no backend, no database.
 | `germany-app.js` | **Germany dashboard logic.** Processes 7 JSON worksheets, renders 18+ charts, executive KPIs, CAGR calculations, and auto-generated insight cards. |
 | `japan.html` | **Japan country dashboard.** Standalone deep-dive page with 4 tabs (Overview, Workforce, Healthcare, Key Insights). Contains inline CSS and CSV data loader. |
 | `japan-app.js` | **Japan dashboard logic.** Processes ISA residence-status CSV data, renders charts across 17 employment residence categories. Data period: June 2021–June 2025. |
-| `data_notes.html` | **Standalone data notes page.** Full methodology reference with stock vs flow definitions, counting methods, source links. Separate from the embedded Data Notes tab in `index.html`. |
-| `gati logo final.png` | GATI Foundation logo displayed in the site header. |
-| `clean_combined.xlsx` | **Reference/source Excel file.** Contains the cleaned source data across 3 sheets (All Reasons, Employment, Healthcare). Not used at runtime — the dashboard fetches live data from Google Sheets. |
-| `read_excel.ps1` | PowerShell utility script for inspecting the Excel file locally. Not used at runtime. |
-| `PROJECT_SUMMARY.md` | Internal project documentation (detailed architecture notes). |
+| `gati-logo.png` | GATI Foundation logo displayed in the site header. |
+| `.gitignore` | Git ignore rules (OS files, editor configs, temp files). |
 
 ---
 
@@ -231,8 +228,8 @@ There is no `package.json`, no `npm install`, no build step. The files are serve
 | Change Germany dashboard | `germany.html` (HTML/CSS/data loader) + `germany-app.js` (logic/charts) |
 | Change Japan dashboard | `japan.html` (HTML/CSS/data loader) + `japan-app.js` (logic/charts) |
 | Add a new country profile | Create `country.html` + `country-app.js`; add navigation link in all HTML files' `.country-nav-menu` |
-| Change data notes content | `index.html` — Data Notes tab panel (`#tab-notes`); also `data_notes.html` (standalone page) |
-| Change site header / logo | All HTML files — `.site-header` section; replace `gati logo final.png` |
+| Change data notes content | `index.html` — Data Notes tab panel (`#tab-notes`) |
+| Change site header / logo | All HTML files — `.site-header` section; replace `gati-logo.png` |
 
 ---
 
@@ -243,7 +240,7 @@ There is no `package.json`, no `npm install`, no build step. The files are serve
 | `index.html` | Multi-country overview (4 tabs: All-purpose migration, Employment, Healthcare, Data Notes) | `app.js` | 3 Google Sheets (CSV) |
 | `germany.html` | Germany deep-dive (5 tabs: Population, Migration Flows, Employment, Healthcare, Key Insights) | `germany-app.js` | Google Apps Script JSON API |
 | `japan.html` | Japan deep-dive (4 tabs: Overview, Workforce, Healthcare, Key Insights) | `japan-app.js` | Google Sheet (CSV) |
-| `data_notes.html` | Standalone methodology reference page | None | Static content |
+
 
 ---
 
@@ -343,10 +340,6 @@ No known unresolved issues are documented at the time of handover.
 
 | File | Type | Notes |
 |---|---|---|
-| `clean_combined.xlsx` | Reference/source | Cleaned source dataset (3 sheets). Not used at runtime — preserved as backup of the original data. |
-| `data_notes.html` | Documentation | Standalone methodology page with source citations and definitions. |
-| `PROJECT_SUMMARY.md` | Documentation | Detailed internal project architecture notes. |
-| `read_excel.ps1` | Utility | PowerShell script for inspecting the Excel file. Development tool only. |
 | Google Sheets (5 spreadsheets) | Live data source | These are the actual runtime data sources — must be preserved and kept published. |
 
 ---
